@@ -1,0 +1,202 @@
+/* ─── Table Base ─────────────────────────────────────────────────── */
+.table-scene {
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle at center, #1b0a0a 0%, #0a0a0f 80%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: white;
+  font-family: var(--font-body);
+}
+
+/* ─── Navigation ──────────────────────────────────────────────────── */
+.table-nav {
+  height: 60px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table-nav__btn {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.table-nav__btn:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+
+.table-nav__info { flex: 1; text-align: center; }
+.table-nav__game { font-family: var(--font-display); font-weight: 900; font-size: 16px; display: block; }
+.table-nav__id { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+.table-nav__actions { display: flex; gap: 12px; }
+
+/* ─── Arena / Table ───────────────────────────────────────────────── */
+.table-arena {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px;
+  position: relative;
+}
+
+.poker-table {
+  width: 100%;
+  max-width: 1000px;
+  aspect-ratio: 1.8 / 1;
+  background: #0d0d0d;
+  border-radius: 600px;
+  border: 18px solid #1a1a1a;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 40px 100px rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.poker-table::before {
+  content: '';
+  position: absolute;
+  top: -4px; bottom: -4px; left: -4px; right: -4px;
+  border-radius: 600px;
+  border: 2px solid var(--red);
+  box-shadow: 0 0 24px var(--red-glow);
+  opacity: 0.4;
+}
+
+.poker-table__surface {
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at center, rgba(160, 20, 30, 0.2) 0%, transparent 70%),
+    url('https://www.transparenttextures.com/patterns/felt.png');
+  border-radius: 600px;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-center { text-align: center; }
+
+.pot { margin-bottom: 24px; }
+.pot__label { font-size: 11px; font-weight: 900; color: var(--text-muted); opacity: 0.6; }
+.pot__value { font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--gold); filter: drop-shadow(0 0 10px var(--gold-glow)); }
+
+.community-cards { display: flex; gap: 12px; }
+
+/* ─── Cards ──────────────────────────────────────────────────────── */
+.poker-card {
+  width: 64px;
+  height: 90px;
+  background: white;
+  border-radius: 6px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform-style: preserve-3d;
+}
+
+.poker-card__inner { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.poker-card__rank { font-size: 24px; }
+.poker-card__suit { font-size: 20px; }
+
+/* ─── Seats ───────────────────────────────────────────────────────── */
+.seat { position: absolute; pointer-events: none; }
+.seat--top { top: -60px; left: 50%; transform: translateX(-50%); }
+.seat--right { right: -60px; top: 50%; transform: translateY(-50%); }
+.seat--bottom-right { bottom: -40px; right: 80px; }
+.seat--bottom { bottom: -60px; left: 50%; transform: translateX(-50%); }
+.seat--bottom-left { bottom: -40px; left: 80px; }
+.seat--left { left: -60px; top: 50%; transform: translateY(-50%); }
+
+.player-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #111;
+  border: 4px solid #222;
+  position: relative;
+  margin: 0 auto 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.player-avatar__img {
+  width: 100%; height: 100%; border-radius: 50%; background: #333; opacity: 0.2;
+}
+
+.player-avatar--turn { border-color: var(--red); box-shadow: 0 0 16px var(--red-glow); }
+
+.player-info { text-align: center; font-size: 13px; font-weight: 700; color: white; }
+.player-chips { font-size: 12px; color: var(--gold); font-weight: 900; }
+
+/* ─── Controls ────────────────────────────────────────────────────── */
+.table-controls {
+  height: 140px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(30px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 40px;
+}
+
+.my-hand { display: flex; gap: 8px; transform: scale(1.1); }
+.personal-card { width: 70px; height: 100px; display: flex; flex-direction: column; }
+
+.table-controls__center { flex: 1; display: flex; justify-content: center; gap: 12px; }
+
+.act-btn {
+  padding: 18px 40px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 16px;
+  font-family: var(--font-display);
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.act-btn--fold { background: #333; color: #888; }
+.act-btn--fold:hover { background: #444; color: #aaa; }
+.act-btn--call { background: var(--bg-card); color: white; border: 2px solid var(--red); box-shadow: 0 0 12px var(--red-dim); }
+.act-btn--call:hover { background: var(--red); box-shadow: 0 0 20px var(--red-glow); }
+.act-btn--raise { background: var(--red); color: white; }
+.act-btn--raise:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--red-glow); }
+
+.bet-slider-mock { width: 240px; }
+.bet-slider-track { height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 99px; position: relative; margin-bottom: 12px; }
+.bet-slider-thumb { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: -5px; left: 30%; box-shadow: 0 0 10px white; }
+.bet-options { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; color: var(--text-muted); }
+
+/* ─── Settings-driven effects ──────────────────────────────── */
+.poker-table__surface--highlight {
+  box-shadow: 0 0 0 1px rgba(0, 163, 255, 0.15), 0 0 40px rgba(0, 163, 255, 0.16);
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.table-scene--focus .poker-table {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}

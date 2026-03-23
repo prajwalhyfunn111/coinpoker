@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Lobby – CoinPoker Royale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #060608;
+            --bg-surface: #0e0e12;
+            --bg-card: #15151c;
+            --bg-card-hover: #1c1c28;
+            --border: rgba(255, 255, 255, 0.08);
+            --red: #e8192c;
+            --red-glow: rgba(232, 25, 44, 0.3);
+            --gold: #f5c142;
+            --gold-glow: rgba(245, 193, 66, 0.25);
+            --green: #00c48c;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+
+        header { height: 72px; padding: 0 32px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: rgba(6, 6, 8, 0.8); backdrop-filter: blur(20px); position: sticky; top:0; z-index: 100; }
+        .logo { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text-primary); }
+        .logo span { color: var(--red); }
+
+        main { padding: 32px; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr 340px; gap: 24px; }
+
+        /* Left side: Filters */
+        .filters { display: flex; flex-direction: column; gap: 20px; }
+        .filter-group { background: var(--bg-surface); border-radius: 16px; padding: 20px; border: 1px solid var(--border); }
+        .filter-title { font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .filter-option { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+        .filter-option input { accent-color: var(--red); }
+
+        /* Center: Lobby Table */
+        .lobby-content { background: var(--bg-surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+        .lobby-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .lobby-title { font-size: 20px; font-family: var(--font-display); font-weight: 700; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 16px 24px; font-size: 11px; color: var(--text-secondary); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 20px 24px; font-size: 14px; border-bottom: 1px solid var(--border); transition: 0.2s; cursor: pointer; }
+        tr:hover td { background: var(--bg-card-hover); }
+        
+        .t-name { font-weight: 700; display: block; margin-bottom: 4px; }
+        .t-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid currentColor; margin-right: 6px; }
+        .tag-red { color: var(--red); }
+        .tag-gold { color: var(--gold); }
+        
+        .buy-in { font-family: var(--font-display); font-weight: 700; color: var(--gold); }
+        .reg-btn { padding: 8px 16px; border-radius: 8px; border: none; background: var(--red); color: white; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; opacity: 0; transform: scale(0.9); }
+        tr:hover .reg-btn { opacity: 1; transform: scale(1); }
+
+        /* Right: Info Panel */
+        .info-panel { display: flex; flex-direction: column; gap: 20px; }
+        .info-card { background: var(--bg-surface); border-radius: 20px; border: 1px solid var(--border); padding: 24px; }
+        .leaderboard-title { font-size: 12px; font-weight: 800; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .leader-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .leader-rank { font-weight: 800; font-size: 12px; color: var(--text-secondary); width: 20px; }
+        .leader-name { flex: 1; font-weight: 600; font-size: 13px; }
+        .leader-score { font-family: var(--font-display); font-weight: 800; color: var(--gold); }
+
+        .featured-banner { background: linear-gradient(135deg, #2a0000 0%, #150000 100%); border-radius: 16px; padding: 20px; border: 1px solid var(--red); position: relative; }
+        .featured-title { font-family: var(--font-display); font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+        .featured-subtitle { font-size: 11px; color: var(--text-secondary); margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Coin<span>Poker</span> Lobby</div>
+    </header>
+
+    <main>
+        <aside class="filters">
+            <div class="filter-group">
+                <div class="filter-title">Stakes</div>
+                <label class="filter-option"><input type="checkbox" checked> Freeroll</label>
+                <label class="filter-option"><input type="checkbox" checked> Micro</label>
+                <label class="filter-option"><input type="checkbox"> Small</label>
+                <label class="filter-option"><input type="checkbox"> Medium</label>
+                <label class="filter-option"><input type="checkbox"> High Rollers</label>
+            </div>
+            <div class="filter-group">
+                <div class="filter-title">Format</div>
+                <label class="filter-option"><input type="checkbox" checked> NLHE</label>
+                <label class="filter-option"><input type="checkbox"> PLO</label>
+                <label class="filter-option"><input type="checkbox"> 5 Card PLO</label>
+            </div>
+        </aside>
+
+        <section class="lobby-content">
+            <div class="lobby-header">
+                <h2 class="lobby-title">Ongoing Tournaments</h2>
+                <div style="font-size: 12px; color: var(--text-secondary);">42 Active Events</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tournament</th>
+                        <th>Starts In</th>
+                        <th>Buy-in</th>
+                        <th>Players</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="t-tag tag-red">HOT</span>
+                            <span class="t-name">Sunday Million Gtd.</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">No Limit Hold'em</span>
+                        </td>
+                        <td>In 24m</td>
+                        <td class="buy-in">₮100.00</td>
+                        <td>842 / 1000</td>
+                        <td><button class="reg-btn">REGISTER</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="t-tag tag-gold">VIP</span>
+                            <span class="t-name">Elite High Roller</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">Pot Limit Omaha</span>
+                        </td>
+                        <td>Lobby Open</td>
+                        <td class="buy-in">₮5,000.00</td>
+                        <td>12 / 50</td>
+                        <td><button class="reg-btn">REGISTER</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="t-name">Fast & Furious Turbo</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">Turbo NLHE</span>
+                        </td>
+                        <td>In 5m</td>
+                        <td class="buy-in">₮10.50</td>
+                        <td>1,240</td>
+                        <td><button class="reg-btn">REGISTER</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="t-tag">FREE</span>
+                            <span class="t-name">Welcome Freeroll</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">Social Event</span>
+                        </td>
+                        <td>In 45m</td>
+                        <td class="buy-in">FREE</td>
+                        <td>2,400</td>
+                        <td><button class="reg-btn">REGISTER</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <aside class="info-panel">
+            <div class="featured-banner">
+                <h3 class="featured-title">WPM MAIN EVENT</h3>
+                <p class="featured-subtitle">₮250,000 Guaranteed Prize Pool</p>
+                <button style="width:100%; padding:10px; background:white; color:black; font-weight:800; border:none; border-radius:8px; cursor:pointer;">VIEW EVENT</button>
+            </div>
+
+            <div class="info-card">
+                <div class="leaderboard-title">🏆 SKILL SCORE BOARD</div>
+                <div class="leader-row">
+                    <span class="leader-rank">1</span>
+                    <span class="leader-name">ApexPlayer</span>
+                    <span class="leader-score">14,250</span>
+                </div>
+                <div class="leader-row">
+                    <span class="leader-rank">2</span>
+                    <span class="leader-name">PokerGosh</span>
+                    <span class="leader-score">12,800</span>
+                </div>
+                <div class="leader-row" style="border:none;">
+                    <span class="leader-rank">3</span>
+                    <span class="leader-name">BluffMaster</span>
+                    <span class="leader-score">11,420</span>
+                </div>
+                <button style="width:100%; background:none; border:1px solid var(--border); color:var(--text-secondary); font-size:11px; padding:8px; border-radius:6px; cursor:pointer;">VIEW ALL RANKINGS</button>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

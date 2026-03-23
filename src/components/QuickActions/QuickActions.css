@@ -1,0 +1,42 @@
+.qa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.qa__card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.qa__card:hover {
+  border-color: var(--qa-color, var(--border-hover));
+  background: var(--bg-card-hover);
+  transform: translateX(3px);
+}
+.qa__icon { font-size: 24px; flex-shrink: 0; }
+.qa__body { flex: 1; }
+.qa__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.qa__desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.qa__arrow {
+  font-size: 22px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.qa__card:hover .qa__arrow { color: var(--qa-color, var(--text-secondary)); }
