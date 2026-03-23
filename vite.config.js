@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: './',
+  base: '/coinpoker/',
   plugins: [react()],
   esbuild: {
     // Some third-party packages ship sourcemap comments that can trigger
