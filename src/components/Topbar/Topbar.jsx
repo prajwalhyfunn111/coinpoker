@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Settings as SettingsIcon, Wallet } from 'lucide-react'
 import './Topbar.css'
 
@@ -30,6 +30,7 @@ export default function Topbar() {
   const [active, setActive] = useState('poker')
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const menuRef = useRef(null)
 
   const handleNav = (id) => {
@@ -110,27 +111,31 @@ export default function Topbar() {
           </div>
 
           <button
-            className="topbar__gear"
+            className="topbar__icon-btn topbar__gear"
             aria-label="Account Settings"
+            type="button"
+            title="Settings"
             onClick={(e) => {
               e.stopPropagation()
               setMenuOpen(false)
               navigate('/settings')
             }}
           >
-            <SettingsIcon size={18} strokeWidth={2.2} />
+            <SettingsIcon size={20} strokeWidth={2.2} />
           </button>
 
           <button
-            className="topbar__wallet"
+            className={`topbar__icon-btn topbar__wallet ${location.pathname === '/wallet' ? 'topbar__icon-btn--active' : ''}`}
             aria-label="Wallet"
+            type="button"
+            title="Wallet"
             onClick={(e) => {
               e.stopPropagation()
               setMenuOpen(false)
               navigate('/wallet')
             }}
           >
-            <Wallet size={18} strokeWidth={2.2} />
+            <Wallet size={20} strokeWidth={2.2} />
           </button>
 
           <AnimatePresence>
