@@ -496,15 +496,18 @@ export default function Settings() {
     )
   }
 
-  const PageAccordionSection = ({ title, eyebrow, sectionKey, children }) => {
-    const isOpen = mainAccordionOpen === sectionKey
+  const PageAccordionSection = ({ title, eyebrow, sectionKey, children, lockedOpen = false }) => {
+    const isOpen = lockedOpen || mainAccordionOpen === sectionKey
     return (
       <div className={`settings-page-accordion ${isOpen ? 'settings-page-accordion--open' : ''}`}>
         <button
           type="button"
           className="settings-page-accordion__header"
           aria-expanded={isOpen}
-          onClick={() => setMainAccordionOpen((current) => (current === sectionKey ? null : sectionKey))}
+          onClick={() => {
+            if (lockedOpen) return
+            setMainAccordionOpen((current) => (current === sectionKey ? null : sectionKey))
+          }}
         >
           <div className="settings-page-accordion__copy">
             {eyebrow ? <div className="settings-page-accordion__eyebrow">{eyebrow}</div> : null}
@@ -678,6 +681,7 @@ export default function Settings() {
                 title="Game Settings"
                 eyebrow="Table Behavior"
                 sectionKey="game"
+                lockedOpen
               >
                 <SettingsToggleRow
                   title="Performance Mode (Reduce Animations)"
@@ -722,6 +726,7 @@ export default function Settings() {
                 title="Sound Settings"
                 eyebrow="Audio Experience"
                 sectionKey="sounds"
+                lockedOpen
               >
                 <SettingsToggleRow
                   title="Personalised for You (Only in Hand)"
