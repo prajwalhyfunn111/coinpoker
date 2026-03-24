@@ -391,6 +391,10 @@ export default function Wallet() {
   const [sortBy, setSortBy] = useState('due-asc')
 
   useEffect(() => {
+    if (activeTab === 'history') {
+      setExpandedIds([])
+      return
+    }
     const firstId = BONUS_ITEMS[activeTab]?.[0]?.id
     setExpandedIds(firstId ? [firstId] : [])
   }, [activeTab])
