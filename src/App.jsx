@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import PokerTable from './pages/PokerTable'
 import CashGames from './pages/CashGames'
@@ -11,7 +11,8 @@ export default function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Navigate to="/settings" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/table" element={<PokerTable />} />
         <Route path="/cash-games" element={<CashGames />} />
         <Route path="/all-in-or-fold" element={<CashGames />} />
