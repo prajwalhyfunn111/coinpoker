@@ -1,21 +1,21 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { Settings as SettingsIcon } from 'lucide-react'
+import { Settings as SettingsIcon, Wallet } from 'lucide-react'
 import './Topbar.css'
 
 const NAV_ITEMS = [
-  { id: 'poker',      label: 'Poker',       icon: '🃏', active: true  },
-  { id: 'casino',     label: 'Casino',      icon: '🎰', active: false },
-  { id: 'live',       label: 'Live Casino', icon: '🎥', active: false },
-  { id: 'sports',     label: 'Sportsbook',  icon: '⚽', active: false },
+  { id: 'poker', label: 'Poker', icon: '🃏', active: true },
+  { id: 'casino', label: 'Casino', icon: '🎰', active: false },
+  { id: 'live', label: 'Live Casino', icon: '🎥', active: false },
+  { id: 'sports', label: 'Sportsbook', icon: '⚽', active: false },
 ]
 
 const MENU_LEFT = [
   { icon: '🏆', label: 'Leaderboards', color: '#FFD700' },
-  { icon: '📊', label: 'Career',       color: '#00a3ff' },
-  { icon: '🧠', label: 'PokerIntel',   color: '#ff4081' },
-  { icon: '🥇', label: 'Winners',      color: '#ffa726' },
+  { icon: '📊', label: 'Career', color: '#00a3ff' },
+  { icon: '🧠', label: 'PokerIntel', color: '#ff4081' },
+  { icon: '🥇', label: 'Winners', color: '#ffa726' },
   { icon: '🎯', label: 'Showdown Meter', color: '#00e676' },
 ]
 
@@ -37,13 +37,13 @@ export default function Topbar() {
     if (id === 'poker') navigate('/')
   }
 
-  // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false)
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
@@ -51,20 +51,18 @@ export default function Topbar() {
   return (
     <header className="topbar">
       <div className="topbar__wrapper">
-        {/* Logo */}
         <div className="topbar__logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <div className="topbar__logo-icon">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="14" fill="#00a3ff"/>
-              <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+              <circle cx="14" cy="14" r="14" fill="#00a3ff" />
+              <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
           <span className="topbar__logo-text">CoinPoker</span>
         </div>
 
-        {/* Primary Nav */}
         <nav className="topbar__nav">
-          {NAV_ITEMS.map(item => (
+          {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
               className={`topbar__nav-item ${active === item.id ? 'topbar__nav-item--active' : ''} ${!item.active ? 'topbar__nav-item--disabled' : ''}`}
@@ -77,45 +75,40 @@ export default function Topbar() {
           ))}
         </nav>
 
-        {/* Right side — Profile */}
         <div className="topbar__right" ref={menuRef}>
-          <div className="topbar__profile" onClick={() => setMenuOpen(!menuOpen)}>
-            {/* Avatar first (far left) */}
+          <div className="topbar__profile" onClick={() => setMenuOpen((open) => !open)}>
             <div className="topbar__avatar">
               <div className="topbar__avatar-circle">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.7)"/>
-                  <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" fill="rgba(255,255,255,0.5)"/>
+                  <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.7)" />
+                  <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" fill="rgba(255,255,255,0.5)" />
                 </svg>
               </div>
               <span className="topbar__avatar-dot" />
             </div>
 
-            {/* Username + Balance */}
             <div className="topbar__profile-info">
               <span className="topbar__username">baazigamesps</span>
               <div className="topbar__balance-row">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="topbar__coin-icon">
-                  <circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#DAA520" strokeWidth="1"/>
-                  <path d="M12 7v10M9 10h6M9 14h6" stroke="#8B6914" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#DAA520" strokeWidth="1" />
+                  <path d="M12 7v10M9 10h6M9 14h6" stroke="#8B6914" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
                 <span className="topbar__balance">₮0</span>
               </div>
             </div>
 
-            {/* Expand Arrow */}
-            <motion.div 
+            <motion.div
               className="topbar__expand"
               animate={{ rotate: menuOpen ? 180 : 0 }}
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M6 9l6 6 6-6"/>
+                <path d="M6 9l6 6 6-6" />
               </svg>
             </motion.div>
           </div>
 
-          {/* Gear button (opens settings page) */}
           <button
             className="topbar__gear"
             aria-label="Account Settings"
@@ -128,31 +121,32 @@ export default function Topbar() {
             <SettingsIcon size={18} strokeWidth={2.2} />
           </button>
 
-          {/* Wallet Icon */}
-          <button className="topbar__wallet" aria-label="Wallet">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <rect x="2" y="5" width="20" height="15" rx="2"/>
-              <path d="M16 12h.01"/>
-              <path d="M2 10h20"/>
-            </svg>
+          <button
+            className="topbar__wallet"
+            aria-label="Wallet"
+            onClick={(e) => {
+              e.stopPropagation()
+              setMenuOpen(false)
+              navigate('/wallet')
+            }}
+          >
+            <Wallet size={18} strokeWidth={2.2} />
           </button>
 
-          {/* Mega Dropdown */}
           <AnimatePresence>
-            {menuOpen && (
-              <motion.div 
+            {menuOpen ? (
+              <motion.div
                 className="topbar__mega-menu"
                 initial={{ opacity: 0, y: -8, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.97 }}
                 transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
               >
-                {/* Profile Header */}
                 <div className="mega__header">
                   <div className="mega__header-avatar">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.7)"/>
-                      <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" fill="rgba(255,255,255,0.5)"/>
+                      <circle cx="12" cy="8" r="4" fill="rgba(255,255,255,0.7)" />
+                      <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" fill="rgba(255,255,255,0.5)" />
                     </svg>
                   </div>
                   <div className="mega__header-info">
@@ -164,7 +158,7 @@ export default function Topbar() {
                   </div>
                   <div className="mega__header-xp">
                     <div className="xp-bar">
-                      <motion.div 
+                      <motion.div
                         className="xp-fill"
                         initial={{ width: 0 }}
                         animate={{ width: '62%' }}
@@ -175,13 +169,11 @@ export default function Topbar() {
                   </div>
                 </div>
 
-                {/* Two Column Layout */}
                 <div className="mega__body">
-                  {/* Left Column — Features */}
                   <div className="mega__col mega__col--left">
                     <span className="mega__col-title">Features</span>
                     {MENU_LEFT.map((item, idx) => (
-                      <motion.button 
+                      <motion.button
                         key={item.label}
                         className="mega__item"
                         initial={{ opacity: 0, x: -12 }}
@@ -197,11 +189,10 @@ export default function Topbar() {
                     ))}
                   </div>
 
-                  {/* Right Column — Account */}
                   <div className="mega__col mega__col--right">
                     <span className="mega__col-title">Account</span>
                     {MENU_RIGHT.map((item, idx) => (
-                      <motion.button 
+                      <motion.button
                         key={item.label}
                         className={`mega__item ${item.danger ? 'mega__item--danger' : ''}`}
                         initial={{ opacity: 0, x: 12 }}
@@ -218,14 +209,13 @@ export default function Topbar() {
                         <span className="mega__item-icon">{item.icon}</span>
                         <span className="mega__item-label">{item.label}</span>
                         <svg className="mega__item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                          <path d="M7 17L17 7M17 7H7M17 7v10" />
                         </svg>
                       </motion.button>
                     ))}
                   </div>
                 </div>
 
-                {/* Footer Stats */}
                 <div className="mega__footer">
                   <div className="mega__stat">
                     <span className="mega__stat-val">₮12,450</span>
@@ -241,7 +231,7 @@ export default function Topbar() {
                   </div>
                 </div>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>

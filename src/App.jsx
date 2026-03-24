@@ -5,6 +5,7 @@ import CashGames from './pages/CashGames'
 import Tournaments from './pages/Tournaments'
 import Freerolls from './pages/Freerolls'
 import Settings from './pages/Settings'
+import Wallet from './pages/Wallet'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/tournaments" element={<Tournaments />} />
         <Route path="/freerolls" element={<Freerolls />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/wallet" element={<Wallet />} />
       </Routes>
     </HashRouter>
   )
