@@ -34,18 +34,18 @@ export default function SkillScoreBanner() {
           <AreaChart data={DATA}>
             <defs>
               <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#00a3ff" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#00a3ff" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#ff4438" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#ff4438" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <Tooltip
-              contentStyle={{ backgroundColor: '#05080c', borderColor: 'rgba(0,163,255,0.1)', borderRadius: '12px' }}
-              itemStyle={{ color: '#00a3ff', fontWeight: 'bold' }}
+              contentStyle={{ backgroundColor: '#05080c', borderColor: 'rgba(255,68,56,0.16)', borderRadius: '12px' }}
+              itemStyle={{ color: '#ff4438', fontWeight: 'bold' }}
             />
             <Area
               type="monotone"
               dataKey="score"
-              stroke="#00a3ff"
+              stroke="#ff4438"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#scoreGradient)"

@@ -389,6 +389,7 @@ export default function Wallet() {
   const [expandedIds, setExpandedIds] = useState([])
   const [dueFilter, setDueFilter] = useState('all')
   const [sortBy, setSortBy] = useState('due-asc')
+  const [wipNotice, setWipNotice] = useState(false)
 
   useEffect(() => {
     if (activeTab === 'history') {
@@ -426,30 +427,38 @@ export default function Wallet() {
     return filteredItems
   }, [items, activeTab, dueFilter, sortBy])
 
-  return (
-    <div className="wallet-page">
-      <div className="wallet-page__shell">
-        <aside className="wallet-page__sidebar">
-          <button type="button" className="wallet-page__brand" onClick={() => navigate('/')}>
-            <span className="wallet-page__brand-icon">
-              <svg width="30" height="30" viewBox="0 0 28 28" fill="none">
-                <circle cx="14" cy="14" r="14" fill="#d21919" />
-                <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-            </span>
-            <span>CoinPoker</span>
-          </button>
+  const renderShell = (
+    <div className="wallet-page__shell">
+      <aside className="wallet-page__sidebar">
+        <button type="button" className="wallet-page__brand" onClick={() => navigate('/')}>
+          <span className="wallet-page__brand-icon">
+            <svg width="30" height="30" viewBox="0 0 28 28" fill="none">
+              <circle cx="14" cy="14" r="14" fill="#d21919" />
+              <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </span>
+          <span>CoinPoker</span>
+        </button>
 
-          <nav className="wallet-page__menu">
+        <nav className="wallet-page__menu">
             {ACCOUNT_ITEMS.map((item) => {
               const Icon = item.icon
               const isActive = activeSide === item.id
+              const isWip = item.id !== 'wallet'
               return (
                 <button
                   key={item.id}
                   type="button"
                   className={`wallet-page__menu-item ${isActive ? 'wallet-page__menu-item--active' : ''}`}
-                  onClick={() => setActiveSide(item.id)}
+                  onClick={() => {
+                    if (isWip) {
+                      setWipNotice(true)
+                      window.clearTimeout(window.__wallet_wip_timeout)
+                      window.__wallet_wip_timeout = window.setTimeout(() => setWipNotice(false), 1600)
+                      return
+                    }
+                    setActiveSide(item.id)
+                  }}
                 >
                   <Icon size={20} strokeWidth={2.1} />
                   <span>{item.label}</span>
@@ -457,22 +466,39 @@ export default function Wallet() {
               )
             })}
           </nav>
-        </aside>
+      </aside>
 
-        <main className="wallet-page__content">
-          <header className="wallet-page__header">
-            <button
-              type="button"
-              className="wallet-page__back"
-              onClick={() => {
-                if (window.history.length > 1) navigate(-1)
-                else navigate('/')
-              }}
+      <main className="wallet-page__content">
+        <AnimatePresence>
+          {wipNotice ? (
+            <motion.div
+              key="wallet-skull"
+              className="wallet-wip-banner wallet-wip-banner--center"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
             >
-              <ArrowLeft size={22} strokeWidth={2.4} />
-            </button>
-            <h1>Casino Bonus</h1>
-          </header>
+              <span role="img" aria-label="skull">💀</span>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        {activeSide === 'wallet' ? (
+          <>
+            <header className="wallet-page__header">
+              <button
+                type="button"
+                className="wallet-page__back"
+                onClick={() => {
+                  if (window.history.length > 1) navigate(-1)
+                  else navigate('/')
+                }}
+              >
+                <ArrowLeft size={22} strokeWidth={2.4} />
+              </button>
+              <h1>Casino Bonus</h1>
+            </header>
 
           {activeSide === 'wallet' ? (
             <>
@@ -540,14 +566,22 @@ export default function Wallet() {
                 ))}
               </section>
             </>
-          ) : (
-            <section className="wallet-page__placeholder">
-              <h2>{ACCOUNT_ITEMS.find((item) => item.id === activeSide)?.label}</h2>
-              <p>This section is available in the wallet hub layout and can be connected to live data next.</p>
-            </section>
-          )}
-        </main>
-      </div>
+            ) : (
+              <section className="wallet-page__placeholder">
+                <h2>{ACCOUNT_ITEMS.find((item) => item.id === activeSide)?.label}</h2>
+                <p>This section is available in the wallet hub layout and can be connected to live data next.</p>
+              </section>
+            )}
+          </>
+        ) : (
+          <section className="wallet-page__placeholder">
+            <h2>{ACCOUNT_ITEMS.find((item) => item.id === activeSide)?.label}</h2>
+            <p>This section is available in the wallet hub layout and can be connected to live data next.</p>
+          </section>
+        )}
+      </main>
     </div>
   )
+
+  return <div className="wallet-page">{renderShell}</div>
 }

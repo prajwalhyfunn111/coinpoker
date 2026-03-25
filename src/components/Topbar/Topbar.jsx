@@ -12,11 +12,11 @@ const NAV_ITEMS = [
 ]
 
 const MENU_LEFT = [
-  { icon: '🏆', label: 'Leaderboards', color: '#FFD700' },
-  { icon: '📊', label: 'Career', color: '#00a3ff' },
-  { icon: '🧠', label: 'PokerIntel', color: '#ff4081' },
-  { icon: '🥇', label: 'Winners', color: '#ffa726' },
-  { icon: '🎯', label: 'Showdown Meter', color: '#00e676' },
+  { icon: '🏆', label: 'Leaderboards', color: '#ffb347' },
+  { icon: '📊', label: 'Career', color: '#ff4438' },
+  { icon: '🧠', label: 'PokerIntel', color: '#ff697e' },
+  { icon: '🥇', label: 'Winners', color: '#ff8f3d' },
+  { icon: '🎯', label: 'Showdown Meter', color: '#ff4438' },
 ]
 
 const MENU_RIGHT = [
@@ -35,7 +35,7 @@ export default function Topbar() {
 
   const handleNav = (id) => {
     setActive(id)
-    if (id === 'poker') navigate('/')
+    if (id === 'poker') navigate('/cash-games')
   }
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function Topbar() {
         <div className="topbar__logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <div className="topbar__logo-icon">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="14" fill="#00a3ff" />
+              <circle cx="14" cy="14" r="14" fill="#ff4438" />
               <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>

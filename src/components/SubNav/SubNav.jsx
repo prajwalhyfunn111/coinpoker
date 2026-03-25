@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './SubNav.css'
@@ -16,6 +16,12 @@ export default function SubNav() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!showDevMessage) return
+    const id = window.setTimeout(() => setShowDevMessage(false), 1400)
+    return () => window.clearTimeout(id)
+  }, [showDevMessage])
+
   const activeTabId = useMemo(() => {
     return TABS.find(t => t.path === location.pathname)?.id || null
   }, [location.pathname])
@@ -25,37 +31,29 @@ export default function SubNav() {
       <motion.div 
         className="subnav__home-btn" 
         id="btn-home" 
-        onClick={() => setShowDevMessage(!showDevMessage)} 
-        animate={{ width: showDevMessage ? 'auto' : 36 }}
-        style={{ cursor: 'pointer', padding: showDevMessage ? '0 12px' : 0, overflow: 'hidden', whiteSpace: 'nowrap' }}
+        onClick={() => setShowDevMessage(true)} 
+        animate={{ width: 36 }}
+        style={{ cursor: 'pointer', padding: 0 }}
       >
-        <AnimatePresence mode="wait">
-          {!showDevMessage ? (
-            <motion.div
-              key="icon"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-              </svg>
-            </motion.div>
-          ) : (
-            <motion.span
-              key="text"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              style={{ fontSize: '12px', fontWeight: 600 }}
-            >
-              Hang in there, Prajwal is making it :)
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
       </motion.div>
+
+      <AnimatePresence>
+        {showDevMessage ? (
+          <motion.div
+            key="subnav-skull"
+            className="subnav__skull-overlay"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          >
+            <span role="img" aria-label="skull">💀</span>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <div className="subnav__tabs">
         {TABS.map(tab => (

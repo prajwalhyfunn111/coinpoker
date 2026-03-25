@@ -23,11 +23,12 @@
   flex-shrink: 0;
   margin-right: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 .subnav__home-btn:hover {
-  background: #0076bb;
+  background: #b71f1a;
   box-shadow: 0 0 12px var(--primary-glow);
+  transform: translateY(-1px);
 }
 
 .subnav__tabs {
@@ -51,6 +52,7 @@
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
+  font-family: var(--font-display);
   transition: color 0.2s, background 0.2s;
   flex-shrink: 0;
 }
@@ -60,7 +62,7 @@
 }
 .subnav__tab--active {
   color: var(--primary);
-  background: rgba(0, 163, 255, 0.06);
+  background: rgba(255, 68, 56, 0.08);
 }
 .subnav__tab-emoji { font-size: 15px; }
 .subnav__tab-bar {
@@ -83,3 +85,27 @@
   transition: color 0.2s;
 }
 .subnav__more:hover { color: var(--text-primary); }
+
+.subnav__skull-overlay {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1200;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%), rgba(12, 14, 22, 0.9);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px);
+  font-size: 44px;
+  animation: subnav-skull-pop 1.4s ease-in-out infinite;
+}
+
+@keyframes subnav-skull-pop {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.95); }
+  50%      { transform: translate(-50%, -50%) scale(1.05); }
+}

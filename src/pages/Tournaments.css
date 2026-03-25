@@ -1,7 +1,7 @@
 .lobby__left {
-    background: linear-gradient(135deg, rgba(0, 163, 255, 0.05) 0%, rgba(0, 5, 15, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255, 68, 56, 0.08) 0%, rgba(0, 5, 15, 0.82) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(0, 163, 255, 0.1);
+    border: 1px solid rgba(255, 68, 56, 0.16);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -11,9 +11,9 @@
 }
 
 .lobby__right {
-    background: linear-gradient(135deg, rgba(0, 163, 255, 0.05) 0%, rgba(0, 5, 15, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255, 68, 56, 0.08) 0%, rgba(0, 5, 15, 0.82) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(0, 163, 255, 0.1);
+    border: 1px solid rgba(255, 68, 56, 0.16);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -406,11 +406,11 @@
     padding: 0 20px 12px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     margin-bottom: 8px;
-    font-size: 11px;
-    font-weight: 850;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: none;
+    letter-spacing: 0.01em;
 }
 
 .table-row {

@@ -11,7 +11,7 @@ export default function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/settings" replace />} />
+        <Route path="/" element={<Navigate to="/cash-games" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/table" element={<PokerTable />} />
         <Route path="/cash-games" element={<CashGames />} />

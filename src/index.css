@@ -9,12 +9,12 @@
   --bg-card-hover: rgba(20, 30, 50, 0.6);
   --bg-elevated:   rgba(30, 45, 65, 0.8);
 
-  --border:        rgba(0, 163, 255, 0.1);
-  --border-specular: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(0, 163, 255, 0.2) 100%);
+  --border:        rgba(255, 68, 56, 0.12);
+  --border-specular: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255, 68, 56, 0.24) 100%);
   
-  --primary:       #00a3ff;
-  --primary-glow:  rgba(0, 163, 255, 0.4);
-  --primary-dim:   rgba(0, 163, 255, 0.1);
+  --primary:       #ff4438;
+  --primary-glow:  rgba(255, 68, 56, 0.4);
+  --primary-dim:   rgba(255, 68, 56, 0.12);
 
   --red:           #ff2e43;
   --red-glow:      rgba(255, 46, 67, 0.4);

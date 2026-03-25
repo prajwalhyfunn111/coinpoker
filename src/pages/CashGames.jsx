@@ -47,19 +47,38 @@ const TableTypeBadge = ({ type }) => {
 }
 
 const SortIcon = ({ columnKey, sortKey, sortOrder }) => {
-    const isActive = sortKey === columnKey;
+  const isActive = sortKey === columnKey
+  const isDesc = sortOrder === 'desc'
+
+  if (!isActive) {
+    // neutral up/down
     return (
-        <span style={{ 
-            opacity: isActive ? 1 : 0.3, 
-            fontSize: '11px', 
-            marginLeft: '4px', 
-            display: 'inline-block',
-            transform: isActive && sortOrder === 'desc' ? 'rotate(180deg)' : 'none',
-            transition: 'all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)' 
-        }}>
-            {isActive ? '↑' : '↕'}
-        </span>
-    );
+      <span className="sort-icon" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M8 9l4-4 4 4" />
+          <path d="M8 15l4 4 4-4" />
+        </svg>
+      </span>
+    )
+  }
+
+  return (
+    <span className="sort-icon sort-icon--active" aria-hidden="true">
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ transform: isDesc ? 'rotate(180deg)' : 'none' }}
+      >
+        <path d="M8 15l4-8 4 8" />
+      </svg>
+    </span>
+  )
 }
 
 const HeadsUpIcon = () => (
@@ -88,9 +107,9 @@ const FEATURE_OPTIONS = [
 ];
 const TABLES_DATA = [
   { id: 1, type: 'NLH',  blinds: '50/100',   blindsVal: 100,  players: '2', buyinVal: 4000,  isVip: true,  color: '#00ff9d', features: ['hu', 'ms'] },
-  { id: 2, type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#00a3ff', features: ['turbo'] },
-  { id: 3, type: 'PLO5', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#00a3ff', features: ['ms'] },
-  { id: 4, type: 'PLO4', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#00a3ff', features: ['hu', 'turbo'] },
+  { id: 2, type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['turbo'] },
+  { id: 3, type: 'PLO5', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['ms'] },
+  { id: 4, type: 'PLO4', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['hu', 'turbo'] },
 ]
 
 const RIGHT_TABLE_DATA = {
@@ -122,13 +141,25 @@ export default function CashGames() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const isAoFRoute = location.pathname === '/all-in-or-fold' || location.pathname === '/bomb-pot'
+
   useEffect(() => {
     setActiveTypes(['All'])
-  }, [location.pathname])
+    if (isAoFRoute) {
+      setSelectedId(null)
+    }
+  }, [location.pathname, isAoFRoute])
 
   const handleRefresh = () => {
     setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 800)
+    if (isAoFRoute) {
+      setSelectedId(null)
+      setIsInspectorLoading(true)
+    }
+    setTimeout(() => {
+      setIsRefreshing(false)
+      if (isAoFRoute) setIsInspectorLoading(false)
+    }, 800)
   }
 
   const handleRowClick = (id) => {
@@ -194,10 +225,14 @@ export default function CashGames() {
   }, [sortKey, sortOrder, activeTypes, activePloVariants])
 
   useEffect(() => {
-    if (sortedTables.length > 0) {
-        setSelectedId(sortedTables[0].id)
+    if (isAoFRoute) {
+      setSelectedId(null)
+      return
     }
-  }, [sortedTables])
+    if (sortedTables.length > 0) {
+      setSelectedId(sortedTables[0].id)
+    }
+  }, [sortedTables, isAoFRoute])
 
   const rawRightData = RIGHT_TABLE_DATA[selectedId] || RIGHT_TABLE_DATA.default
   const selectedTable = TABLES_DATA.find(t => t.id === selectedId)

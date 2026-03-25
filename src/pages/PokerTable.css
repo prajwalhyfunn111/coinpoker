@@ -192,7 +192,7 @@
 
 /* ─── Settings-driven effects ──────────────────────────────── */
 .poker-table__surface--highlight {
-  box-shadow: 0 0 0 1px rgba(0, 163, 255, 0.15), 0 0 40px rgba(0, 163, 255, 0.16);
+  box-shadow: 0 0 0 1px rgba(255, 68, 56, 0.18), 0 0 40px rgba(255, 68, 56, 0.22);
   animation: float 3.2s ease-in-out infinite;
 }
 
