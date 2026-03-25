@@ -29,8 +29,8 @@ const ACCOUNT_ITEMS = [
 ]
 
 const BONUS_TABS = [
-  { id: 'active', label: 'Active', enabled: false },
-  { id: 'available', label: 'Available', enabled: false },
+  { id: 'active', label: 'Active', enabled: true },
+  { id: 'available', label: 'Available', enabled: true },
   { id: 'history', label: 'History', enabled: true },
 ]
 
