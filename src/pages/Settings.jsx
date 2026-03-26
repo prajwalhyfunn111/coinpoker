@@ -103,7 +103,8 @@ function createMinimalisticDraft(themes) {
   }
 }
 
-function SettingsToggleRow({ title, description, checked, onChange }) {
+function SettingsToggleRow({ title, description, checked, onChange, disabled }) {
+  const handleChange = disabled ? () => {} : onChange
   return (
     <div className="settings-row">
       <div className="settings-row__text">
@@ -111,7 +112,7 @@ function SettingsToggleRow({ title, description, checked, onChange }) {
         {description ? <div className="settings-row__desc">{description}</div> : null}
       </div>
       <div className="settings-row__right">
-        <SettingsSwitch checked={checked} onChange={onChange} />
+        <SettingsSwitch checked={checked} onChange={handleChange} disabled={disabled} />
       </div>
     </div>
   )
@@ -380,6 +381,7 @@ export default function Settings() {
   const [minimalisticConfirmOpen, setMinimalisticConfirmOpen] = useState(false)
   const [isZenLaunching, setIsZenLaunching] = useState(false)
   const [isApplyingZen, setIsApplyingZen] = useState(false)
+  const [zenAppliedVisible, setZenAppliedVisible] = useState(false)
   const [settings, actions] = useTableSettings()
 
   const { themes, gameSettings, soundSettings } = settings
@@ -393,7 +395,6 @@ export default function Settings() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [minimalisticConfirmOpen])
 
-  const [activeThemeCategory, setActiveThemeCategory] = useState('tableTheme')
   const [modalThemeCategory, setModalThemeCategory] = useState('tableTheme')
   const [modalAccordionOpen, setModalAccordionOpen] = useState(null)
   const [mainAccordionOpen, setMainAccordionOpen] = useState(null)
@@ -433,6 +434,8 @@ export default function Settings() {
       actions.setTableSettings(modalSettingsDraft)
       setMinimalisticConfirmOpen(false)
       setIsApplyingZen(false)
+      setZenAppliedVisible(true)
+      window.setTimeout(() => setZenAppliedVisible(false), 1600)
     }, 280)
   }
 
@@ -442,9 +445,11 @@ export default function Settings() {
     { id: 'sounds', label: 'Sounds' },
   ]
 
+  const SETTINGS_READ_ONLY = true
+
   const modalThemeValues = modalSettingsDraft.themes
 
-  const renderThemeBrowser = (category, values, onSelect) => (
+  const renderThemeBrowser = (category, values, onSelect, disabled = false) => (
     <ThemeBrowser
       category={category}
       selectedValue={
@@ -457,8 +462,8 @@ export default function Settings() {
               : values.chipsId
       }
       tablePreview={TABLE_THEME_OPTIONS.find((option) => option.id === values.tableThemeIndex)?.preview || TABLE_THEME_OPTIONS[0].preview}
-      disabled={false}
-      onSelect={onSelect}
+      disabled={Boolean(disabled)}
+      onSelect={disabled ? undefined : onSelect}
     />
   )
 
@@ -580,6 +585,40 @@ export default function Settings() {
         ) : null}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {zenAppliedVisible ? (
+          <motion.div
+            className="settings-zen-applied-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="settings-zen-applied-overlay__bg" />
+            <motion.div
+              className="settings-zen-applied-overlay__content"
+              initial={{ opacity: 0, scale: 0.7, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -10 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
+              <motion.div
+                className="settings-zen-applied-overlay__icon"
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.2, 1] }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12l5 5L19 7" />
+                </svg>
+              </motion.div>
+              <div className="settings-zen-applied-overlay__text">Zen Mode Applied</div>
+              <div className="settings-zen-applied-overlay__sub">Your focused preset is now active</div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       <Topbar />
 
       <div className="settings-page__container">
@@ -648,36 +687,15 @@ export default function Settings() {
           <div className="settings-page__panel settings-page__panel--scroll">
             {activeNav === 'themes' ? (
               <>
-                <div className="settings-theme-categories">
+                <div className="settings-theme-gallery">
                   {THEME_CATEGORIES.map((category) => (
-                    <button
-                      key={category.kind}
-                      type="button"
-                      className={`settings-theme-category ${activeThemeCategory === category.kind ? 'settings-theme-category--active' : ''}`}
-                      onClick={() => setActiveThemeCategory(category.kind)}
-                    >
-                      <div className="settings-theme-category__label">{category.label}</div>
-                    </button>
+                    <div key={category.kind} className="settings-theme-gallery__section">
+                      <div className="settings-theme-category__label settings-theme-category__label--static">
+                        {category.label}
+                      </div>
+                      {renderThemeBrowser(category.kind, themes, null, true)}
+                    </div>
                   ))}
-                </div>
-
-                <div className="settings-theme-subnav">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeThemeCategory}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.18 }}
-                    >
-                      {renderThemeBrowser(activeThemeCategory, themes, (value) => {
-                        if (activeThemeCategory === 'tableTheme') actions.setTableSettings({ themes: { tableThemeIndex: value } })
-                        if (activeThemeCategory === 'cardDeck') actions.setTableSettings({ themes: { cardDeck: value } })
-                        if (activeThemeCategory === 'cardBack') actions.setTableSettings({ themes: { cardBack: value } })
-                        if (activeThemeCategory === 'chips') actions.setTableSettings({ themes: { chipsId: value } })
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
                 </div>
               </>
             ) : null}
@@ -692,36 +710,43 @@ export default function Settings() {
                   title="Performance Mode (Reduce Animations)"
                   checked={gameSettings.performanceModeReduceAnimations}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { performanceModeReduceAnimations: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Show Folded Cards"
                   checked={gameSettings.showFoldedCards}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { showFoldedCards: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Window Highlight Animation"
                   checked={gameSettings.windowHighlightAnimation}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { windowHighlightAnimation: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Focus Window on Turn"
                   checked={gameSettings.focusWindowOnTurn}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { focusWindowOnTurn: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Show Throwables on Hover"
                   checked={gameSettings.showThrowablesOnHover}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { showThrowablesOnHover: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Disable Throwables Entirely"
                   checked={gameSettings.disableThrowablesEntirely}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { disableThrowablesEntirely: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
                 <SettingsToggleRow
                   title="Sort by Suit"
                   checked={gameSettings.sortBySuit}
                   onChange={(v) => actions.setTableSettings({ gameSettings: { sortBySuit: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
               </PageAccordionSection>
             ) : null}
@@ -736,11 +761,12 @@ export default function Settings() {
                   title="Personalised for You (Only in Hand)"
                   checked={soundSettings.personalisedOnlyInHand}
                   onChange={(v) => actions.setTableSettings({ soundSettings: { personalisedOnlyInHand: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
 
                 <VolumeSlider
                   value={soundSettings.volumeLevel}
-                  disabled={!soundSettings.allSoundsMasterToggle}
+                  disabled={SETTINGS_READ_ONLY || !soundSettings.allSoundsMasterToggle}
                   onChange={(v) => actions.setTableSettings({ soundSettings: { volumeLevel: v } })}
                 />
 
@@ -748,6 +774,7 @@ export default function Settings() {
                   title="All Sounds (Master Toggle)"
                   checked={soundSettings.allSoundsMasterToggle}
                   onChange={(v) => actions.setTableSettings({ soundSettings: { allSoundsMasterToggle: v } })}
+                  disabled={SETTINGS_READ_ONLY}
                 />
 
                 {[
@@ -777,6 +804,7 @@ export default function Settings() {
                     title={item.label}
                     checked={Boolean(soundSettings.sounds?.[item.key])}
                     onChange={(v) => actions.setTableSettings({ soundSettings: { sounds: { [item.key]: v } } })}
+                    disabled={SETTINGS_READ_ONLY}
                   />
                 ))}
               </PageAccordionSection>
@@ -815,56 +843,24 @@ export default function Settings() {
 
             <div className="settings-modal__body">
               <div className="settings-modal__theme-previews">
-                <div className="settings-theme-categories">
-                  {THEME_CATEGORIES.map((category) => (
-                    <button
-                      key={category.kind}
-                      type="button"
-                      className={`settings-theme-category ${modalThemeCategory === category.kind ? 'settings-theme-category--active' : ''}`}
-                      onClick={() => setModalThemeCategory(category.kind)}
-                    >
-                      <div className="settings-theme-category__label">{category.label}</div>
-                    </button>
-                  ))}
-                </div>
+                <div className="settings-zen-grid">
+                  {THEME_CATEGORIES.map((category) => {
+                    const selectedOption =
+                      category.kind === 'tableTheme'
+                        ? TABLE_THEME_OPTIONS.find((o) => o.id === modalThemeValues.tableThemeIndex) || TABLE_THEME_OPTIONS[0]
+                        : category.kind === 'cardDeck'
+                          ? CARD_DECK_OPTIONS.find((o) => o.id === modalThemeValues.cardDeck) || CARD_DECK_OPTIONS[0]
+                          : category.kind === 'cardBack'
+                            ? CARD_BACK_OPTIONS.find((o) => o.id === modalThemeValues.cardBack) || CARD_BACK_OPTIONS[0]
+                            : CHIP_OPTIONS.find((o) => o.id === modalThemeValues.chipsId) || CHIP_OPTIONS[0];
 
-                <div className="settings-theme-subnav">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={`modal-${modalThemeCategory}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.18 }}
-                    >
-                      {renderThemeBrowser(modalThemeCategory, modalThemeValues, (value) => {
-                        if (modalThemeCategory === 'tableTheme') {
-                          setModalSettingsDraft((prev) => ({
-                            ...prev,
-                            themes: { ...prev.themes, tableThemeIndex: value },
-                          }))
-                        }
-                        if (modalThemeCategory === 'cardDeck') {
-                          setModalSettingsDraft((prev) => ({
-                            ...prev,
-                            themes: { ...prev.themes, cardDeck: value },
-                          }))
-                        }
-                        if (modalThemeCategory === 'cardBack') {
-                          setModalSettingsDraft((prev) => ({
-                            ...prev,
-                            themes: { ...prev.themes, cardBack: value },
-                          }))
-                        }
-                        if (modalThemeCategory === 'chips') {
-                          setModalSettingsDraft((prev) => ({
-                            ...prev,
-                            themes: { ...prev.themes, chipsId: value },
-                          }))
-                        }
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
+                    return (
+                      <div key={category.kind} className="settings-zen-grid__cell">
+                        <div className="settings-zen-grid__label">{category.label}</div>
+                        <ThemeMainPreview category={category.kind} selectedOption={selectedOption} />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -877,7 +873,8 @@ export default function Settings() {
                         <div className="settings-modal__item-label">{item.label}</div>
                         <SettingsSwitch
                           checked={on}
-                          onChange={(value) => setModalSettingsDraft((prev) => setByPath(prev, item.path, value))}
+                          disabled={true}
+                          onChange={() => {}}
                         />
                       </div>
                     )
@@ -894,7 +891,8 @@ export default function Settings() {
                           <div className="settings-modal__item-label">{item.label}</div>
                           <SettingsSwitch
                             checked={on}
-                            onChange={(next) => setModalSettingsDraft((prev) => setByPath(prev, item.path, next))}
+                            disabled={true}
+                            onChange={() => {}}
                           />
                         </div>
                       )
@@ -908,7 +906,8 @@ export default function Settings() {
                           min={0}
                           max={100}
                           value={Math.round((Number(value) || 0) * 100)}
-                          onChange={(e) => setModalSettingsDraft((prev) => setByPath(prev, item.path, Number(e.target.value) / 100))}
+                          disabled={true}
+                          onChange={() => {}}
                           className="settings-range"
                           aria-label={item.label}
                         />
