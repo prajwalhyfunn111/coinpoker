@@ -374,8 +374,8 @@
 }
 
 .settings-switch input:checked + .settings-switch__track {
-  border-color: rgba(255, 68, 56, 0.7);
-  background: rgba(255, 68, 56, 0.28);
+  border-color: rgba(0, 230, 118, 0.7);
+  background: rgba(0, 230, 118, 0.25);
 }
 
 .settings-switch input:checked + .settings-switch__track .settings-switch__thumb {
@@ -540,14 +540,14 @@
   outline-offset: 2px;
 }
 .settings-badge--on {
+  background: rgba(0, 230, 118, 0.18);
+  border-color: rgba(0, 230, 118, 0.55);
+  color: rgba(210, 255, 228, 0.96);
+}
+.settings-badge--off {
   background: rgba(255, 68, 56, 0.18);
   border-color: rgba(255, 68, 56, 0.5);
   color: rgba(255, 230, 226, 0.96);
-}
-.settings-badge--off {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.78);
 }
 
 /* Modal */

@@ -411,6 +411,12 @@ export default function Settings() {
     if (!minimalisticConfirmOpen) setIsApplyingZen(false)
   }, [minimalisticConfirmOpen])
 
+  useEffect(() => {
+    if (activeNav === 'game' || activeNav === 'sounds') {
+      setMainAccordionOpen(activeNav)
+    }
+  }, [activeNav])
+
   const handleOpenZenMode = () => {
     if (isZenLaunching || minimalisticConfirmOpen) return
     setIsZenLaunching(true)
@@ -681,7 +687,6 @@ export default function Settings() {
                 title="Game Settings"
                 eyebrow="Table Behavior"
                 sectionKey="game"
-                lockedOpen
               >
                 <SettingsToggleRow
                   title="Performance Mode (Reduce Animations)"
@@ -726,7 +731,6 @@ export default function Settings() {
                 title="Sound Settings"
                 eyebrow="Audio Experience"
                 sectionKey="sounds"
-                lockedOpen
               >
                 <SettingsToggleRow
                   title="Personalised for You (Only in Hand)"
