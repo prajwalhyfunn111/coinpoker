@@ -1696,6 +1696,24 @@
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   margin-bottom: 0;
+  cursor: default;
+}
+
+/* Override pointer cursor for disabled/non-interactive elements in modal */
+.settings-modal .settings-switch {
+  cursor: default;
+}
+
+.settings-modal .settings-switch input:disabled + .settings-switch__track {
+  cursor: default;
+}
+
+.settings-modal .settings-range:disabled {
+  cursor: default;
+}
+
+.settings-modal .settings-modal__item .settings-range {
+  cursor: default;
 }
 .settings-modal__item-label {
   font-size: 12px;
