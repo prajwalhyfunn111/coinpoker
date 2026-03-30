@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './Login.css'
 
-const ACCESS_PASSWORD = 'fuckyou'
+const ACCESS_PASSWORD = 'ogivey'
 
 export default function Login() {
   const [password, setPassword] = useState('')
