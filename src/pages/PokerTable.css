@@ -1,13 +1,56 @@
+/* ─── Table Shell / Modal ───────────────────────────────────────── */
+.table-shell {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle at 35% 15%, rgba(255, 68, 56, 0.08), transparent 45%), #05060b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vw, 40px);
+}
+
+.table-modal {
+  width: min(1200px, 96vw);
+  height: min(820px, 92vh);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0a0a0f;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 68, 56, 0.08);
+  overflow: hidden;
+  display: flex;
+}
+
 /* ─── Table Base ─────────────────────────────────────────────────── */
 .table-scene {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   background: radial-gradient(circle at center, #1b0a0a 0%, #0a0a0f 80%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
   color: white;
   font-family: var(--font-body);
+}
+
+.table-scene--charcoal {
+  background: radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.05), transparent 40%), #0a0b10;
+}
+
+.table-scene--indigo {
+  background: radial-gradient(circle at 30% 10%, rgba(120, 140, 255, 0.12), transparent 45%), #0b0c18;
+}
+
+.table-scene--burgundy {
+  background: radial-gradient(circle at 30% 10%, rgba(255, 120, 110, 0.08), transparent 42%), #12090d;
+}
+
+.table-scene--navy {
+  background: radial-gradient(circle at 30% 10%, rgba(120, 170, 255, 0.1), transparent 42%), #0b0f1b;
+}
+
+.table-scene--amber {
+  background: radial-gradient(circle at 30% 10%, rgba(255, 188, 120, 0.12), transparent 42%), #120d0a;
 }
 
 /* ─── Navigation ──────────────────────────────────────────────────── */
@@ -41,21 +84,70 @@
 
 .table-nav__actions { display: flex; gap: 12px; }
 
+.table-nav__btn--gear {
+  width: 40px;
+  justify-content: center;
+}
+
+
 /* ─── Arena / Table ───────────────────────────────────────────────── */
 .table-arena {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px;
+  padding: clamp(24px, 6vw, 80px);
   position: relative;
+}
+
+/* ─── Toast ──────────────────────────────────────────────────────── */
+.table-toast {
+  position: absolute;
+  right: clamp(18px, 3vw, 36px);
+  bottom: clamp(140px, 18vh, 200px);
+  max-width: 360px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 12, 18, 0.96);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+}
+
+.table-toast__title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.table-toast__copy {
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.table-toast__cta {
+  color: #ff6b5f;
+  font-weight: 800;
+  margin-left: 4px;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.table-toast__cta:hover {
+  color: #ff887f;
 }
 
 .poker-table {
   width: 100%;
   max-width: 1000px;
   aspect-ratio: 1.8 / 1;
-  background: #0d0d0d;
+  background: linear-gradient(180deg, #1b1e24, #0c0d12);
   border-radius: 600px;
   border: 18px solid #1a1a1a;
   box-shadow: 
@@ -66,6 +158,34 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
+}
+
+.poker-table--octagon {
+  border-radius: 22% / 18%;
+}
+
+.poker-table--rail-shadow {
+  background: linear-gradient(180deg, #1a1b20, #0b0b10);
+}
+
+.poker-table--rail-slate {
+  background: linear-gradient(180deg, #2a2f36, #121418);
+}
+
+.poker-table--rail-teal {
+  background: linear-gradient(180deg, #193841, #0b1418);
+}
+
+.poker-table--rail-graphite {
+  background: linear-gradient(180deg, #2c2c31, #121214);
+}
+
+.poker-table--rail-blueSteel {
+  background: linear-gradient(180deg, #3c5676, #152333);
+}
+
+.poker-table--rail-copper {
+  background: linear-gradient(180deg, #5f3a1a, #24130a);
 }
 
 .poker-table::before {
@@ -92,6 +212,36 @@
   justify-content: center;
 }
 
+.poker-table__surface--felt-teal {
+  background:
+    radial-gradient(circle at center, rgba(121, 214, 255, 0.12), transparent 55%),
+    linear-gradient(135deg, #137c63, #06524a);
+}
+
+.poker-table__surface--felt-green {
+  background:
+    radial-gradient(circle at center, rgba(121, 214, 63, 0.16), transparent 55%),
+    linear-gradient(135deg, #1f8a1f, #136014);
+}
+
+.poker-table__surface--felt-crimson {
+  background:
+    radial-gradient(circle at center, rgba(255, 130, 130, 0.18), transparent 55%),
+    linear-gradient(135deg, #6f1822, #441119);
+}
+
+.poker-table__surface--felt-violet {
+  background:
+    radial-gradient(circle at center, rgba(182, 109, 236, 0.18), transparent 55%),
+    linear-gradient(135deg, #5e1d6f, #3b174a);
+}
+
+.poker-table__surface--felt-blue {
+  background:
+    radial-gradient(circle at center, rgba(133, 179, 255, 0.18), transparent 55%),
+    linear-gradient(135deg, #204d96, #16376b);
+}
+
 .table-center { text-align: center; }
 
 .pot { margin-bottom: 24px; }
@@ -99,6 +249,57 @@
 .pot__value { font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--gold); filter: drop-shadow(0 0 10px var(--gold-glow)); }
 
 .community-cards { display: flex; gap: 12px; }
+
+.table-chips {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.table-chip {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.table-chip::before,
+.table-chip::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+.table-chip__center {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.table-chip__center--star::before {
+  content: '✦';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 10px;
+}
+
+.table-chip--red { background: linear-gradient(180deg, #fa4454, #b51d2c); }
+.table-chip--blue { background: linear-gradient(180deg, #3c79ff, #2752bd); }
+.table-chip--gold { background: linear-gradient(180deg, #ffcc44, #d59714); }
+.table-chip--teal { background: linear-gradient(180deg, #32c4a2, #138067); }
+.table-chip--slate { background: linear-gradient(180deg, #7f8597, #484d5f); }
+.table-chip--bronze { background: linear-gradient(180deg, #f89a3e, #b8681e); }
+.table-chip--stone { background: linear-gradient(180deg, #a0a4ae, #676b75); }
 
 /* ─── Cards ──────────────────────────────────────────────────────── */
 .poker-card {
@@ -146,12 +347,47 @@
 
 .player-avatar--turn { border-color: var(--red); box-shadow: 0 0 16px var(--red-glow); }
 
+.player-cards {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.table-card-back {
+  width: 34px;
+  height: 48px;
+  border-radius: 6px;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.table-card-back--retro {
+  background:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.14) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.14) 75%, transparent 75%, transparent),
+    linear-gradient(135deg, #7c0f20, #8b1632);
+  background-size: 14px 14px, auto;
+}
+
+.table-card-back--modern {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
+    linear-gradient(45deg, #0f1014 25%, #272a31 25%, #272a31 50%, #0f1014 50%, #0f1014 75%, #272a31 75%, #272a31);
+  background-size: 18px 18px;
+}
+
+.table-card-back--classic {
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0 3px, transparent 3px 8px),
+    linear-gradient(135deg, #5688ba, #6898ca);
+}
+
 .player-info { text-align: center; font-size: 13px; font-weight: 700; color: white; }
 .player-chips { font-size: 12px; color: var(--gold); font-weight: 900; }
 
 /* ─── Controls ────────────────────────────────────────────────────── */
 .table-controls {
-  height: 140px;
+  height: clamp(110px, 12vh, 140px);
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(30px);
   border-top: 1px solid rgba(255, 255, 255, 0.06);

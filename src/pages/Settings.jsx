@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Topbar from '../components/Topbar/Topbar'
 import { useTableSettings } from '../lib/useTableSettings'
@@ -92,9 +93,9 @@ function setByPath(obj, path, value) {
   }
 }
 
-function createMinimalisticDraft(themes) {
+function createMinimalisticDraft() {
   return {
-    themes: { ...themes },
+    themes: { ...MINIMALISTIC_MODE_PRESET.themes },
     gameSettings: { ...MINIMALISTIC_MODE_PRESET.gameSettings },
     soundSettings: {
       ...MINIMALISTIC_MODE_PRESET.soundSettings,
@@ -377,6 +378,7 @@ function ThemeBrowser({ category, selectedValue, tablePreview, disabled, onSelec
 }
 
 export default function Settings() {
+  const location = useLocation()
   const [activeNav, setActiveNav] = useState('game')
   const [minimalisticConfirmOpen, setMinimalisticConfirmOpen] = useState(false)
   const [isZenLaunching, setIsZenLaunching] = useState(false)
@@ -398,15 +400,15 @@ export default function Settings() {
   const [modalThemeCategory, setModalThemeCategory] = useState('tableTheme')
   const [modalAccordionOpen, setModalAccordionOpen] = useState(null)
   const [mainAccordionOpen, setMainAccordionOpen] = useState(null)
-  const [modalSettingsDraft, setModalSettingsDraft] = useState(() => createMinimalisticDraft(themes))
+  const [modalSettingsDraft, setModalSettingsDraft] = useState(() => createMinimalisticDraft())
 
   useEffect(() => {
     if (minimalisticConfirmOpen) setModalThemeCategory('tableTheme')
   }, [minimalisticConfirmOpen])
 
   useEffect(() => {
-    if (minimalisticConfirmOpen) setModalSettingsDraft(createMinimalisticDraft(themes))
-  }, [minimalisticConfirmOpen, themes])
+    if (minimalisticConfirmOpen) setModalSettingsDraft(createMinimalisticDraft())
+  }, [minimalisticConfirmOpen])
 
   useEffect(() => {
     if (!minimalisticConfirmOpen) setIsApplyingZen(false)
@@ -417,6 +419,28 @@ export default function Settings() {
       setMainAccordionOpen(activeNav)
     }
   }, [activeNav])
+
+  useEffect(() => {
+    if (!location?.state?.nav) return
+    setActiveNav(location.state.nav)
+    setMinimalisticConfirmOpen(false)
+  }, [location?.state?.nav])
+
+  useEffect(() => {
+    const storedNav = sessionStorage.getItem('settings_nav')
+    if (!storedNav) return
+    setActiveNav(storedNav)
+    setMinimalisticConfirmOpen(false)
+    sessionStorage.removeItem('settings_nav')
+  }, [])
+
+  useEffect(() => {
+    const openZen = sessionStorage.getItem('settings_zen')
+    if (!openZen) return
+    setActiveNav('game')
+    setMinimalisticConfirmOpen(true)
+    sessionStorage.removeItem('settings_zen')
+  }, [])
 
   const handleOpenZenMode = () => {
     if (isZenLaunching || minimalisticConfirmOpen) return
@@ -435,7 +459,10 @@ export default function Settings() {
       setMinimalisticConfirmOpen(false)
       setIsApplyingZen(false)
       setZenAppliedVisible(true)
-      window.setTimeout(() => setZenAppliedVisible(false), 1600)
+      window.setTimeout(() => {
+        setZenAppliedVisible(false)
+        window.location.hash = '#/table'
+      }, 700)
     }, 280)
   }
 
@@ -626,16 +653,23 @@ export default function Settings() {
           <div className="settings-page__sidebar-title">Settings</div>
 
           <nav className="settings-page__nav" aria-label="Settings navigation">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`settings-page__nav-item ${item.id === activeNav ? 'settings-page__nav-item--active' : ''}`}
-                onClick={() => setActiveNav(item.id)}
-              >
-                <span>{item.label}</span>
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const isActive = !minimalisticConfirmOpen && item.id === activeNav
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`settings-page__nav-item ${isActive ? 'settings-page__nav-item--active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
+                  onClick={() => {
+                    setActiveNav(item.id)
+                    setMinimalisticConfirmOpen(false)
+                  }}
+                >
+                  <span>{item.label}</span>
+                </button>
+              )
+            })}
           </nav>
 
           <div className="settings-page__sidebar-bottom">
@@ -685,265 +719,257 @@ export default function Settings() {
 
         <main className="settings-page__main">
           <div className="settings-page__panel settings-page__panel--scroll">
-            {activeNav === 'themes' ? (
-              <>
-                <div className="settings-theme-gallery">
-                  {THEME_CATEGORIES.map((category) => (
-                    <div key={category.kind} className="settings-theme-gallery__section">
-                      <div className="settings-theme-category__label settings-theme-category__label--static">
-                        {category.label}
-                      </div>
-                      {renderThemeBrowser(category.kind, themes, null, true)}
-                    </div>
-                  ))}
+            {minimalisticConfirmOpen ? (
+              <div className="settings-zen-panel settings-modal" role="region" aria-label="Zen Mode settings">
+                <button
+                  className="settings-modal__close"
+                  aria-label="Close Zen Mode"
+                  onClick={() => setMinimalisticConfirmOpen(false)}
+                  type="button"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6l-12 12" />
+                  </svg>
+                </button>
+
+                <div className="settings-modal__header">
+                  <div className="settings-modal__title">Zen Mode</div>
+                  <div className="settings-modal__subtitle">Calm, refined table experience with focused controls.</div>
                 </div>
+
+                <div className="settings-modal__body">
+                  <div className="settings-modal__theme-previews">
+                    <div className="settings-zen-grid">
+                      {THEME_CATEGORIES.map((category) => {
+                        const selectedOption =
+                          category.kind === 'tableTheme'
+                            ? TABLE_THEME_OPTIONS.find((o) => o.id === modalThemeValues.tableThemeIndex) || TABLE_THEME_OPTIONS[0]
+                            : category.kind === 'cardDeck'
+                              ? CARD_DECK_OPTIONS.find((o) => o.id === modalThemeValues.cardDeck) || CARD_DECK_OPTIONS[0]
+                              : category.kind === 'cardBack'
+                                ? CARD_BACK_OPTIONS.find((o) => o.id === modalThemeValues.cardBack) || CARD_BACK_OPTIONS[0]
+                                : CHIP_OPTIONS.find((o) => o.id === modalThemeValues.chipsId) || CHIP_OPTIONS[0];
+
+                        return (
+                          <div key={category.kind} className="settings-zen-grid__cell">
+                            <div className="settings-zen-grid__label">{category.label}</div>
+                            <ThemeMainPreview category={category.kind} selectedOption={selectedOption} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="settings-modal__scroll">
+                    <ModalAccordionSection title="Game Settings" sectionKey="game">
+                      {MINIMALISTIC_MODE_GAME_ITEMS.map((item) => {
+                        const on = Boolean(getByPath(modalSettingsDraft, item.path))
+                        return (
+                          <div className="settings-modal__item" key={item.label}>
+                            <div className="settings-modal__item-label">{item.label}</div>
+                            <SettingsSwitch
+                              checked={on}
+                              disabled={true}
+                              onChange={() => {}}
+                            />
+                          </div>
+                        )
+                      })}
+                    </ModalAccordionSection>
+
+                    <ModalAccordionSection title="Sound Settings" sectionKey="sound">
+                      {MINIMALISTIC_MODE_SOUND_ITEMS.map((item) => {
+                        const value = getByPath(modalSettingsDraft, item.path)
+                        if (item.type === 'toggle') {
+                          const on = Boolean(value)
+                          return (
+                            <div className="settings-modal__item" key={item.label}>
+                              <div className="settings-modal__item-label">{item.label}</div>
+                              <SettingsSwitch
+                                checked={on}
+                                disabled={true}
+                                onChange={() => {}}
+                              />
+                            </div>
+                          )
+                        }
+
+                        return (
+                          <div className="settings-modal__item settings-modal__item--number" key={item.label}>
+                            <div className="settings-modal__item-label">{item.label}</div>
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={Math.round((Number(value) || 0) * 100)}
+                              disabled={true}
+                              onChange={() => {}}
+                              className="settings-range"
+                              aria-label={item.label}
+                            />
+                          </div>
+                        )
+                      })}
+                    </ModalAccordionSection>
+                  </div>
+                </div>
+
+                <div className="settings-modal__footer">
+                  <motion.button
+                    type="button"
+                    className={`settings-modal__apply ${isApplyingZen ? 'settings-modal__apply--applying' : ''}`}
+                    onClick={handleApplyMinimalistic}
+                    whileTap={{ scale: 0.97 }}
+                    animate={isApplyingZen ? { scale: [1, 1.04, 1], boxShadow: ['0 18px 38px rgba(78,110,255,0.28)', '0 24px 56px rgba(133,85,255,0.36)', '0 18px 38px rgba(78,110,255,0.28)'] } : { scale: 1 }}
+                    transition={{ duration: 0.28 }}
+                  >
+                    <span className="settings-modal__apply-label">{isApplyingZen ? 'Applying...' : 'Apply'}</span>
+                    <motion.span
+                      className="settings-modal__apply-arrow"
+                      aria-hidden="true"
+                      animate={isApplyingZen ? { x: [0, 8, 0], opacity: [0.75, 1, 0.9] } : { x: 0, opacity: 0.9 }}
+                      transition={isApplyingZen ? { duration: 0.45, repeat: 1 } : { duration: 0.18 }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        <path d="m8.5 4.5 3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </motion.span>
+                  </motion.button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {activeNav === 'themes' ? (
+                  <>
+                    <div className="settings-theme-gallery">
+                      {THEME_CATEGORIES.map((category) => (
+                        <div key={category.kind} className="settings-theme-gallery__section">
+                          <div className="settings-theme-category__label settings-theme-category__label--static">
+                            {category.label}
+                          </div>
+                          {renderThemeBrowser(category.kind, themes, null, true)}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : null}
+
+                {activeNav === 'game' ? (
+                  <PageAccordionSection
+                    title="Game Settings"
+                    eyebrow="Table Behavior"
+                    sectionKey="game"
+                  >
+                    <SettingsToggleRow
+                      title="Performance Mode (Reduce Animations)"
+                      checked={gameSettings.performanceModeReduceAnimations}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { performanceModeReduceAnimations: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Show Folded Cards"
+                      checked={gameSettings.showFoldedCards}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { showFoldedCards: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Window Highlight Animation"
+                      checked={gameSettings.windowHighlightAnimation}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { windowHighlightAnimation: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Focus Window on Turn"
+                      checked={gameSettings.focusWindowOnTurn}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { focusWindowOnTurn: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Show Throwables on Hover"
+                      checked={gameSettings.showThrowablesOnHover}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { showThrowablesOnHover: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Disable Throwables Entirely"
+                      checked={gameSettings.disableThrowablesEntirely}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { disableThrowablesEntirely: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                    <SettingsToggleRow
+                      title="Sort by Suit"
+                      checked={gameSettings.sortBySuit}
+                      onChange={(v) => actions.setTableSettings({ gameSettings: { sortBySuit: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+                  </PageAccordionSection>
+                ) : null}
+
+                {activeNav === 'sounds' ? (
+                  <PageAccordionSection
+                    title="Sound Settings"
+                    eyebrow="Audio Experience"
+                    sectionKey="sounds"
+                  >
+                    <SettingsToggleRow
+                      title="Personalised for You (Only in Hand)"
+                      checked={soundSettings.personalisedOnlyInHand}
+                      onChange={(v) => actions.setTableSettings({ soundSettings: { personalisedOnlyInHand: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+
+                    <VolumeSlider
+                      value={soundSettings.volumeLevel}
+                      disabled={SETTINGS_READ_ONLY || !soundSettings.allSoundsMasterToggle}
+                      onChange={(v) => actions.setTableSettings({ soundSettings: { volumeLevel: v } })}
+                    />
+
+                    <SettingsToggleRow
+                      title="All Sounds (Master Toggle)"
+                      checked={soundSettings.allSoundsMasterToggle}
+                      onChange={(v) => actions.setTableSettings({ soundSettings: { allSoundsMasterToggle: v } })}
+                      disabled={SETTINGS_READ_ONLY}
+                    />
+
+                    {[
+                      { key: 'betRaise', label: 'Bet/Raise' },
+                      { key: 'click', label: 'Click' },
+                      { key: 'fold', label: 'Fold' },
+                      { key: 'check', label: 'Check' },
+                      { key: 'betSlider', label: 'Bet Slider' },
+                      { key: 'cardDealing', label: 'Card Dealing' },
+                      { key: 'communityCards', label: 'Community Cards' },
+                      { key: 'flipCards', label: 'Flip Cards' },
+                      { key: 'winnings', label: 'Winnings' },
+                      { key: 'turn', label: 'Turn' },
+                      { key: 'backgroundMusic', label: 'Background Music' },
+                      { key: 'splashDrop', label: 'Splash Drop' },
+                      { key: 'bombPot', label: 'Bomb Pot' },
+                      { key: 'allInShowdown', label: 'All-in Showdown' },
+                      { key: 'extraTimeActivation', label: 'Extra Time Activation' },
+                      { key: 'dealerVoice', label: 'Dealer Voice' },
+                      { key: 'drawingDead', label: 'Drawing Dead' },
+                      { key: 'delightWinning', label: 'Delight Winning' },
+                      { key: 'emojiPlaying', label: 'Emoji Playing' },
+                      { key: 'blindsUp', label: 'Blinds Up' },
+                    ].map((item) => (
+                      <SettingsToggleRow
+                        key={item.key}
+                        title={item.label}
+                        checked={Boolean(soundSettings.sounds?.[item.key])}
+                        onChange={(v) => actions.setTableSettings({ soundSettings: { sounds: { [item.key]: v } } })}
+                        disabled={SETTINGS_READ_ONLY}
+                      />
+                    ))}
+                  </PageAccordionSection>
+                ) : null}
               </>
-            ) : null}
-
-            {activeNav === 'game' ? (
-              <PageAccordionSection
-                title="Game Settings"
-                eyebrow="Table Behavior"
-                sectionKey="game"
-              >
-                <SettingsToggleRow
-                  title="Performance Mode (Reduce Animations)"
-                  checked={gameSettings.performanceModeReduceAnimations}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { performanceModeReduceAnimations: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Show Folded Cards"
-                  checked={gameSettings.showFoldedCards}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { showFoldedCards: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Window Highlight Animation"
-                  checked={gameSettings.windowHighlightAnimation}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { windowHighlightAnimation: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Focus Window on Turn"
-                  checked={gameSettings.focusWindowOnTurn}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { focusWindowOnTurn: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Show Throwables on Hover"
-                  checked={gameSettings.showThrowablesOnHover}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { showThrowablesOnHover: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Disable Throwables Entirely"
-                  checked={gameSettings.disableThrowablesEntirely}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { disableThrowablesEntirely: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-                <SettingsToggleRow
-                  title="Sort by Suit"
-                  checked={gameSettings.sortBySuit}
-                  onChange={(v) => actions.setTableSettings({ gameSettings: { sortBySuit: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-              </PageAccordionSection>
-            ) : null}
-
-            {activeNav === 'sounds' ? (
-              <PageAccordionSection
-                title="Sound Settings"
-                eyebrow="Audio Experience"
-                sectionKey="sounds"
-              >
-                <SettingsToggleRow
-                  title="Personalised for You (Only in Hand)"
-                  checked={soundSettings.personalisedOnlyInHand}
-                  onChange={(v) => actions.setTableSettings({ soundSettings: { personalisedOnlyInHand: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-
-                <VolumeSlider
-                  value={soundSettings.volumeLevel}
-                  disabled={SETTINGS_READ_ONLY || !soundSettings.allSoundsMasterToggle}
-                  onChange={(v) => actions.setTableSettings({ soundSettings: { volumeLevel: v } })}
-                />
-
-                <SettingsToggleRow
-                  title="All Sounds (Master Toggle)"
-                  checked={soundSettings.allSoundsMasterToggle}
-                  onChange={(v) => actions.setTableSettings({ soundSettings: { allSoundsMasterToggle: v } })}
-                  disabled={SETTINGS_READ_ONLY}
-                />
-
-                {[
-                  { key: 'betRaise', label: 'Bet/Raise' },
-                  { key: 'click', label: 'Click' },
-                  { key: 'fold', label: 'Fold' },
-                  { key: 'check', label: 'Check' },
-                  { key: 'betSlider', label: 'Bet Slider' },
-                  { key: 'cardDealing', label: 'Card Dealing' },
-                  { key: 'communityCards', label: 'Community Cards' },
-                  { key: 'flipCards', label: 'Flip Cards' },
-                  { key: 'winnings', label: 'Winnings' },
-                  { key: 'turn', label: 'Turn' },
-                  { key: 'backgroundMusic', label: 'Background Music' },
-                  { key: 'splashDrop', label: 'Splash Drop' },
-                  { key: 'bombPot', label: 'Bomb Pot' },
-                  { key: 'allInShowdown', label: 'All-in Showdown' },
-                  { key: 'extraTimeActivation', label: 'Extra Time Activation' },
-                  { key: 'dealerVoice', label: 'Dealer Voice' },
-                  { key: 'drawingDead', label: 'Drawing Dead' },
-                  { key: 'delightWinning', label: 'Delight Winning' },
-                  { key: 'emojiPlaying', label: 'Emoji Playing' },
-                  { key: 'blindsUp', label: 'Blinds Up' },
-                ].map((item) => (
-                  <SettingsToggleRow
-                    key={item.key}
-                    title={item.label}
-                    checked={Boolean(soundSettings.sounds?.[item.key])}
-                    onChange={(v) => actions.setTableSettings({ soundSettings: { sounds: { [item.key]: v } } })}
-                    disabled={SETTINGS_READ_ONLY}
-                  />
-                ))}
-              </PageAccordionSection>
-            ) : null}
+            )}
           </div>
         </main>
       </div>
-
-      {minimalisticConfirmOpen ? (
-        <div
-          className="settings-modal-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Zen Mode confirmation"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setMinimalisticConfirmOpen(false)
-          }}
-        >
-          <div className="settings-modal">
-            <button
-              className="settings-modal__close"
-              aria-label="Close"
-              onClick={() => setMinimalisticConfirmOpen(false)}
-              type="button"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M6 6l12 12" />
-                <path d="M18 6l-12 12" />
-              </svg>
-            </button>
-
-            <div className="settings-modal__header">
-              <div className="settings-modal__title">Zen Mode</div>
-              <div className="settings-modal__subtitle">Calm, refined table experience with focused controls.</div>
-            </div>
-
-            <div className="settings-modal__body">
-              <div className="settings-modal__theme-previews">
-                <div className="settings-zen-grid">
-                  {THEME_CATEGORIES.map((category) => {
-                    const selectedOption =
-                      category.kind === 'tableTheme'
-                        ? TABLE_THEME_OPTIONS.find((o) => o.id === modalThemeValues.tableThemeIndex) || TABLE_THEME_OPTIONS[0]
-                        : category.kind === 'cardDeck'
-                          ? CARD_DECK_OPTIONS.find((o) => o.id === modalThemeValues.cardDeck) || CARD_DECK_OPTIONS[0]
-                          : category.kind === 'cardBack'
-                            ? CARD_BACK_OPTIONS.find((o) => o.id === modalThemeValues.cardBack) || CARD_BACK_OPTIONS[0]
-                            : CHIP_OPTIONS.find((o) => o.id === modalThemeValues.chipsId) || CHIP_OPTIONS[0];
-
-                    return (
-                      <div key={category.kind} className="settings-zen-grid__cell">
-                        <div className="settings-zen-grid__label">{category.label}</div>
-                        <ThemeMainPreview category={category.kind} selectedOption={selectedOption} />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="settings-modal__scroll">
-                <ModalAccordionSection title="Game Settings" sectionKey="game">
-                  {MINIMALISTIC_MODE_GAME_ITEMS.map((item) => {
-                    const on = Boolean(getByPath(modalSettingsDraft, item.path))
-                    return (
-                      <div className="settings-modal__item" key={item.label}>
-                        <div className="settings-modal__item-label">{item.label}</div>
-                        <SettingsSwitch
-                          checked={on}
-                          disabled={true}
-                          onChange={() => {}}
-                        />
-                      </div>
-                    )
-                  })}
-                </ModalAccordionSection>
-
-                <ModalAccordionSection title="Sound Settings" sectionKey="sound">
-                  {MINIMALISTIC_MODE_SOUND_ITEMS.map((item) => {
-                    const value = getByPath(modalSettingsDraft, item.path)
-                    if (item.type === 'toggle') {
-                      const on = Boolean(value)
-                      return (
-                        <div className="settings-modal__item" key={item.label}>
-                          <div className="settings-modal__item-label">{item.label}</div>
-                          <SettingsSwitch
-                            checked={on}
-                            disabled={true}
-                            onChange={() => {}}
-                          />
-                        </div>
-                      )
-                    }
-
-                    return (
-                      <div className="settings-modal__item settings-modal__item--number" key={item.label}>
-                        <div className="settings-modal__item-label">{item.label}</div>
-                        <input
-                          type="range"
-                          min={0}
-                          max={100}
-                          value={Math.round((Number(value) || 0) * 100)}
-                          disabled={true}
-                          onChange={() => {}}
-                          className="settings-range"
-                          aria-label={item.label}
-                        />
-                      </div>
-                    )
-                  })}
-                </ModalAccordionSection>
-              </div>
-            </div>
-
-            <div className="settings-modal__footer">
-              <motion.button
-                type="button"
-                className={`settings-modal__apply ${isApplyingZen ? 'settings-modal__apply--applying' : ''}`}
-                onClick={handleApplyMinimalistic}
-                whileTap={{ scale: 0.97 }}
-                animate={isApplyingZen ? { scale: [1, 1.04, 1], boxShadow: ['0 18px 38px rgba(78,110,255,0.28)', '0 24px 56px rgba(133,85,255,0.36)', '0 18px 38px rgba(78,110,255,0.28)'] } : { scale: 1 }}
-                transition={{ duration: 0.28 }}
-              >
-                <span className="settings-modal__apply-label">{isApplyingZen ? 'Applying...' : 'Apply'}</span>
-                <motion.span
-                  className="settings-modal__apply-arrow"
-                  aria-hidden="true"
-                  animate={isApplyingZen ? { x: [0, 8, 0], opacity: [0.75, 1, 0.9] } : { x: 0, opacity: 0.9 }}
-                  transition={isApplyingZen ? { duration: 0.45, repeat: 1 } : { duration: 0.18 }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    <path d="m8.5 4.5 3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </motion.span>
-              </motion.button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   )
 }
