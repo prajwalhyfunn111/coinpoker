@@ -361,7 +361,15 @@ export default function CashGames() {
                                         <CoinsIcon />
                                         <span>₮{t.buyinVal}</span>
                                     </div>
-                                    <button className="btn-quick-join" disabled onClick={(e) => e.stopPropagation()} style={{ opacity: 0.5, cursor: 'not-allowed' }}>Quick Join</button>
+                                    <button
+                                      className="btn-quick-join"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        navigate('/table')
+                                      }}
+                                    >
+                                      Quick Join
+                                    </button>
                                 </div>
                             ))
                         ) : (

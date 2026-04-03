@@ -577,6 +577,17 @@
   position: relative;
 }
 
+.settings-zen-panel {
+  width: 100%;
+  max-height: none;
+  min-height: 0;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+}
+
+.settings-zen-panel .settings-modal__body {
+  overflow: visible;
+}
+
 .settings-modal__close {
   position: absolute;
   right: 18px;
