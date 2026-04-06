@@ -676,7 +676,7 @@ export default function Settings() {
             })}
           </nav>
 
-          <div className="settings-page__sidebar-bottom">
+          <div className="settings-page__sidebar-zen">
             <motion.button
               type="button"
               className={`settings-minimal-btn ${isZenLaunching ? 'settings-minimal-btn--launching' : ''}`}
@@ -703,18 +703,7 @@ export default function Settings() {
               <span className="settings-minimal-btn__glow" aria-hidden="true" />
               <span className="settings-minimal-btn__copy">
                 <span className="settings-minimal-btn__label">{isZenLaunching ? 'Entering Zen...' : 'Zen Mode'}</span>
-                <span className="settings-minimal-btn__meta">Focused preset</span>
               </span>
-              <motion.span
-                className="settings-minimal-btn__icon"
-                aria-hidden="true"
-                animate={isZenLaunching ? { x: [0, 6, 0], rotate: [0, 14, 0] } : { x: 0, rotate: 0 }}
-                transition={{ duration: 0.34, ease: 'easeOut' }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 3c-1.6 2.4-4.1 4.6-7.3 6.6 1.1 4 3.5 7.4 7.3 10.1 3.8-2.7 6.2-6.1 7.3-10.1C16.1 7.6 13.6 5.4 12 3Z" />
-                </svg>
-              </motion.span>
               <span className="settings-minimal-btn__shimmer" aria-hidden="true" />
               <span className="settings-minimal-btn__pulse" aria-hidden="true" />
             </motion.button>

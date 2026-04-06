@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, MessageSquare, Info, ShieldCheck, Settings as Gear } from 'lucide-react'
+import { ArrowLeft, MessageSquare, Info, Settings as Gear } from 'lucide-react'
 import './PokerTable.css'
 import { useTableSettings } from '../lib/useTableSettings'
 
@@ -92,19 +92,25 @@ export default function PokerTable() {
   }, [showFoldedCards, reduceAnimations])
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setShowFpsToast(true), 1200)
+    const timer = window.setTimeout(() => setShowFpsToast(true), 900)
     return () => window.clearTimeout(timer)
   }, [])
 
   const activeTurnPlayer = PLAYERS.find((p) => p.turn)
   const focus = focusWindowOnTurn && Boolean(activeTurnPlayer)
 
-  const exitTable = () => window.history.back()
+  const exitTable = () => {
+    window.history.back()
+  }
 
   const goToZenMode = () => {
     sessionStorage.setItem('settings_zen', '1')
     setShowFpsToast(false)
     window.location.hash = '#/settings'
+  }
+
+  const dismissToastForSession = () => {
+    setShowFpsToast(false)
   }
 
   return (
@@ -114,10 +120,7 @@ export default function PokerTable() {
       {/* ── Top Bar ──────────────────────────── */}
       <header className="table-nav">
         <button onClick={exitTable} className="table-nav__btn"><ArrowLeft size={20} /></button>
-        <div className="table-nav__info">
-          <span className="table-nav__game">NL Hold'em – ₮10/₮20</span>
-          <span className="table-nav__id">Table #402 – "Royal Flush"</span>
-        </div>
+        <div className="table-nav__info" />
         <div className="table-nav__actions">
           <button
             className="table-nav__btn table-nav__btn--gear"
@@ -129,7 +132,6 @@ export default function PokerTable() {
           >
             <Gear size={20} />
           </button>
-          <button className="table-nav__btn"><ShieldCheck size={20} /> RNG Verified</button>
           <button className="table-nav__btn"><MessageSquare size={20} /></button>
           <button className="table-nav__btn"><Info size={20} /></button>
         </div>
@@ -232,11 +234,16 @@ export default function PokerTable() {
           >
             <div className="table-toast__title">Performance Notice</div>
             <p className="table-toast__copy">
-              We detected lower frame rates on this table.{' '}
+              We detected reduced frame rates on this table. Enable Zen Mode to improve performance.
+            </p>
+            <div className="table-toast__actions">
               <button type="button" className="table-toast__cta" onClick={goToZenMode}>
                 Enable Zen Mode
               </button>
-            </p>
+              <button type="button" className="table-toast__btn" onClick={dismissToastForSession}>
+                Dismiss for this table
+              </button>
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
