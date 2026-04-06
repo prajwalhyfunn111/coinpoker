@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import './QuickActions.css'
 
 const ACTIONS = [
@@ -20,6 +21,7 @@ const ACTIONS = [
 ]
 
 export default function QuickActions() {
+  const navigate = useNavigate()
   return (
     <div className="qa">
       {ACTIONS.map(a => (
@@ -28,6 +30,7 @@ export default function QuickActions() {
           id={`qa-${a.id}`}
           className="qa__card"
           style={{ '--qa-color': a.color }}
+          onClick={() => navigate('/table')}
         >
           <div className="qa__icon">{a.icon}</div>
           <div className="qa__body">
