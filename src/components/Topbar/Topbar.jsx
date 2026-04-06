@@ -13,10 +13,10 @@ const NAV_ITEMS = [
 
 const MENU_LEFT = [
   { icon: '🏆', label: 'Leaderboards', color: '#ffb347' },
-  { icon: '📊', label: 'Career', color: '#ff4438' },
+  { icon: '📊', label: 'Career', color: '#e2463d' },
   { icon: '🧠', label: 'PokerIntel', color: '#ff697e' },
   { icon: '🥇', label: 'Winners', color: '#ff8f3d' },
-  { icon: '🎯', label: 'Showdown Meter', color: '#ff4438' },
+  { icon: '🎯', label: 'Showdown Meter', color: '#e2463d' },
 ]
 
 const MENU_RIGHT = [
@@ -55,7 +55,7 @@ export default function Topbar() {
         <div className="topbar__logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <div className="topbar__logo-icon">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="14" fill="#ff4438" />
+              <circle cx="14" cy="14" r="14" fill="#e2463d" />
               <path d="M14 8v12M8 14h12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>

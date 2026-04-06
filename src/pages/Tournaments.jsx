@@ -36,7 +36,7 @@ const SortIcon = ({ columnKey, sortKey, sortOrder }) => {
 
 const TOURNAMENTS_DATA = [
   { id: 1, time: '22:35 22 Mar', timeVal: 1, name: 'LUS: ₮150 CoinMasters BITCOIN', type: 'Level Up Series', buyin: '150', buyinVal: 150, players: '530', prize: '200,000', prizeVal: 200000, color: '#ffd700', status: 'Registering', daysLeft: '3d 8h' },
-  { id: 2, time: '22:35 22 Mar', timeVal: 1, name: '₮1,050 Falcon', type: 'Daily Featured', buyin: '1,050', buyinVal: 1050, players: '122', prize: '150,000', prizeVal: 150000, color: '#ff4438', status: 'Registering', daysLeft: '3d 8h' },
+  { id: 2, time: '22:35 22 Mar', timeVal: 1, name: '₮1,050 Falcon', type: 'Daily Featured', buyin: '1,050', buyinVal: 1050, players: '122', prize: '150,000', prizeVal: 150000, color: '#e2463d', status: 'Registering', daysLeft: '3d 8h' },
   { id: 3, time: '23:35 22 Mar', timeVal: 2, name: 'LUS: ₮530 Sunday Main Event HR', type: 'Level Up Series', buyin: '530', buyinVal: 530, players: '1', prize: '150,000', prizeVal: 150000, color: '#ffd700', status: 'Registering', daysLeft: '3d 9h' },
   { id: 4, time: 'Starts in 9h', timeVal: 3, name: 'LUSSide: ₮530 Thursday 6-Max Masters', type: 'Level Up Series', buyin: '530', buyinVal: 530, players: '1', prize: '75,000', prizeVal: 75000, color: '#ff0055', status: 'Late Reg', daysLeft: '9h 6m' },
 ]

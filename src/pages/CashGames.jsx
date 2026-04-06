@@ -107,9 +107,9 @@ const FEATURE_OPTIONS = [
 ];
 const TABLES_DATA = [
   { id: 1, type: 'NLH',  blinds: '50/100',   blindsVal: 100,  players: '2', buyinVal: 4000,  isVip: true,  color: '#00ff9d', features: ['hu', 'ms'] },
-  { id: 2, type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['turbo'] },
-  { id: 3, type: 'PLO5', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['ms'] },
-  { id: 4, type: 'PLO4', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#ff4438', features: ['hu', 'turbo'] },
+  { id: 2, type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['turbo'] },
+  { id: 3, type: 'PLO5', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['ms'] },
+  { id: 4, type: 'PLO4', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['hu', 'turbo'] },
 ]
 
 const RIGHT_TABLE_DATA = {

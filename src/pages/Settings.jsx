@@ -438,7 +438,11 @@ export default function Settings() {
     const openZen = sessionStorage.getItem('settings_zen')
     if (!openZen) return
     setActiveNav('game')
-    setMinimalisticConfirmOpen(true)
+    setIsZenLaunching(true)
+    window.setTimeout(() => {
+      setMinimalisticConfirmOpen(true)
+      setIsZenLaunching(false)
+    }, 420)
     sessionStorage.removeItem('settings_zen')
   }, [])
 

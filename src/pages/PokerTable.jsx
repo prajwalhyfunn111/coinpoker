@@ -230,11 +230,11 @@ export default function PokerTable() {
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <div className="table-toast__title">Performance Tip</div>
+            <div className="table-toast__title">Performance Notice</div>
             <p className="table-toast__copy">
-              We could sense that your FPS is dropping.{' '}
+              We detected lower frame rates on this table.{' '}
               <button type="button" className="table-toast__cta" onClick={goToZenMode}>
-                Add the zen mode
+                Enable Zen Mode
               </button>
             </p>
           </motion.div>

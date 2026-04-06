@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import './GameFormats.css'
 
 const FORMATS = [
-  { id: 'cash',       label: 'Cash Games',     emoji: '💰', color: '#ff4438', bg: 'rgba(255,68,56,0.12)'  },
-  { id: 'tournaments',label: 'Tournaments',    emoji: '🏆', color: '#ff4438', bg: 'rgba(255,68,56,0.12)'  },
+  { id: 'cash',       label: 'Cash Games',     emoji: '💰', color: '#e2463d', bg: 'rgba(255,68,56,0.12)'  },
+  { id: 'tournaments',label: 'Tournaments',    emoji: '🏆', color: '#e2463d', bg: 'rgba(255,68,56,0.12)'  },
   { id: 'allin',      label: 'All-In Fold',    emoji: '⚡', color: '#00ccff', bg: 'rgba(0,204,255,0.1)'   },
   { id: 'practice',   label: 'Practice Games', emoji: '🃏', color: '#00ff9d', bg: 'rgba(0,255,157,0.08)'  },
 ]

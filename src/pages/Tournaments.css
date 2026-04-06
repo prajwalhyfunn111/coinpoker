@@ -1,7 +1,7 @@
 .lobby__left {
-    background: linear-gradient(135deg, rgba(255, 68, 56, 0.08) 0%, rgba(0, 5, 15, 0.82) 100%);
+    background: linear-gradient(135deg, rgba(226, 70, 61, 0.04) 0%, rgba(0, 5, 15, 0.88) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(255, 68, 56, 0.16);
+    border: 1px solid rgba(226, 70, 61, 0.1);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -11,9 +11,9 @@
 }
 
 .lobby__right {
-    background: linear-gradient(135deg, rgba(255, 68, 56, 0.08) 0%, rgba(0, 5, 15, 0.82) 100%);
+    background: linear-gradient(135deg, rgba(226, 70, 61, 0.04) 0%, rgba(0, 5, 15, 0.88) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(255, 68, 56, 0.16);
+    border: 1px solid rgba(226, 70, 61, 0.1);
     padding: 24px;
     display: flex;
     flex-direction: column;

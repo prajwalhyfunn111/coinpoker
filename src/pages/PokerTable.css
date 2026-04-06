@@ -2,7 +2,7 @@
 .table-shell {
   min-height: 100vh;
   width: 100vw;
-  background: radial-gradient(circle at 35% 15%, rgba(255, 68, 56, 0.08), transparent 45%), #05060b;
+  background: radial-gradient(circle at 35% 15%, rgba(226, 70, 61, 0.1), transparent 45%), #0f1522;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,12 +10,12 @@
 }
 
 .table-modal {
-  width: min(1200px, 96vw);
-  height: min(820px, 92vh);
+  width: min(980px, 90vw);
+  height: min(660px, 82vh);
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #0a0a0f;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 68, 56, 0.08);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(226, 70, 61, 0.08);
   overflow: hidden;
   display: flex;
 }
@@ -24,7 +24,7 @@
 .table-scene {
   height: 100%;
   width: 100%;
-  background: radial-gradient(circle at center, #1b0a0a 0%, #0a0a0f 80%);
+  background: radial-gradient(circle at center, #1f1014 0%, #0b0e15 80%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -34,29 +34,29 @@
 }
 
 .table-scene--charcoal {
-  background: radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.05), transparent 40%), #0a0b10;
+  background: radial-gradient(circle at 30% 10%, rgba(255, 255, 255, 0.06), transparent 40%), #0b0f16;
 }
 
 .table-scene--indigo {
-  background: radial-gradient(circle at 30% 10%, rgba(120, 140, 255, 0.12), transparent 45%), #0b0c18;
+  background: radial-gradient(circle at 30% 10%, rgba(120, 140, 255, 0.14), transparent 45%), #0d1224;
 }
 
 .table-scene--burgundy {
-  background: radial-gradient(circle at 30% 10%, rgba(255, 120, 110, 0.08), transparent 42%), #12090d;
+  background: radial-gradient(circle at 30% 10%, rgba(226, 70, 61, 0.12), transparent 42%), #140c11;
 }
 
 .table-scene--navy {
-  background: radial-gradient(circle at 30% 10%, rgba(120, 170, 255, 0.1), transparent 42%), #0b0f1b;
+  background: radial-gradient(circle at 30% 10%, rgba(120, 170, 255, 0.12), transparent 42%), #0d1325;
 }
 
 .table-scene--amber {
-  background: radial-gradient(circle at 30% 10%, rgba(255, 188, 120, 0.12), transparent 42%), #120d0a;
+  background: radial-gradient(circle at 30% 10%, rgba(255, 188, 120, 0.14), transparent 42%), #14100c;
 }
 
 /* ─── Navigation ──────────────────────────────────────────────────── */
 .table-nav {
   height: 60px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(5, 7, 12, 0.75);
   backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
@@ -103,8 +103,10 @@
 /* ─── Toast ──────────────────────────────────────────────────────── */
 .table-toast {
   position: absolute;
-  right: clamp(18px, 3vw, 36px);
-  bottom: clamp(140px, 18vh, 200px);
+  top: clamp(70px, 9vh, 110px);
+  right: clamp(20px, 3vw, 36px);
+  left: auto;
+  transform: none;
   max-width: 360px;
   padding: 14px 16px;
   border-radius: 14px;
@@ -157,7 +159,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
 }
 
 .poker-table--octagon {
@@ -204,7 +206,7 @@
   background: 
     radial-gradient(ellipse at center, rgba(160, 20, 30, 0.2) 0%, transparent 70%),
     url('https://www.transparenttextures.com/patterns/felt.png');
-  border-radius: 600px;
+  border-radius: inherit;
   border: 2px solid rgba(255, 255, 255, 0.05);
   position: relative;
   display: flex;
@@ -428,11 +430,10 @@
 
 /* ─── Settings-driven effects ──────────────────────────────── */
 .poker-table__surface--highlight {
-  box-shadow: 0 0 0 1px rgba(255, 68, 56, 0.18), 0 0 40px rgba(255, 68, 56, 0.22);
-  animation: float 3.2s ease-in-out infinite;
+  box-shadow: 0 0 0 1px rgba(226, 70, 61, 0.18), 0 0 40px rgba(226, 70, 61, 0.22);
+  animation: none;
 }
 
 .table-scene--focus .poker-table {
-  transform: scale(1.01);
-  transition: transform 0.2s ease;
+  transform: none;
 }
