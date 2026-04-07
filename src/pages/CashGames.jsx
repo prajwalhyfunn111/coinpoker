@@ -106,10 +106,19 @@ const FEATURE_OPTIONS = [
     { id: 'hf', icon: null, label: 'Hide Full' }
 ];
 const TABLES_DATA = [
-  { id: 1, type: 'NLH',  blinds: '50/100',   blindsVal: 100,  players: '2', buyinVal: 4000,  isVip: true,  color: '#00ff9d', features: ['hu', 'ms'] },
-  { id: 2, type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['turbo'] },
-  { id: 3, type: 'PLO5', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['ms'] },
-  { id: 4, type: 'PLO4', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['hu', 'turbo'] },
+  // Cash Games
+  { id: 1, format: 'cash', type: 'NLH',  blinds: '50/100',   blindsVal: 100,  players: '2', buyinVal: 4000,  isVip: true,  color: '#00ff9d', features: ['hu', 'ms'] },
+  { id: 2, format: 'cash', type: 'PLO6', blinds: '200/400',  blindsVal: 400,  players: '0', buyinVal: 16000, isVip: true,  color: '#e2463d', features: ['turbo'] },
+  { id: 3, format: 'cash', type: 'PLO5', blinds: '10/20',     blindsVal: 20,   players: '4', buyinVal: 800,   isVip: false, color: '#00ccff', features: ['ms'] },
+  { id: 4, format: 'cash', type: 'PLO4', blinds: '25/50',    blindsVal: 50,   players: '6', buyinVal: 2000,  isVip: false, color: '#ffb347', features: ['hu', 'turbo'] },
+  
+  // All-In Or Fold
+  { id: 5, format: 'aof',  type: 'NLH',  blinds: '500/1000', blindsVal: 1000, players: '8', buyinVal: 10000, isVip: true,  color: '#ff3b30', features: ['ms'] },
+  { id: 6, format: 'aof',  type: 'PLO4', blinds: '100/200',  blindsVal: 200,  players: '3', buyinVal: 2000,  isVip: false, color: '#00ff9d', features: ['turbo'] },
+  
+  // Bomb Pot
+  { id: 7, format: 'bp',   type: 'PLO5', blinds: '25/50',    blindsVal: 50,   players: '5', buyinVal: 2500,  isVip: false, color: '#e2463d', features: ['bp', 'ms'] },
+  { id: 8, format: 'bp',   type: 'NLH',  blinds: '200/400',  blindsVal: 400,  players: '1', buyinVal: 8000,  isVip: true,  color: '#ff9500', features: ['bp', 'hu'] },
 ]
 
 const RIGHT_TABLE_DATA = {
@@ -120,6 +129,14 @@ const RIGHT_TABLE_DATA = {
   2: [
     { id: 201, stack: '₮45K', players: '1/6', features: ['ms', 'turbo'] },
     { id: 202, stack: '₮30K', players: '4/6', features: ['ms'] }
+  ],
+  5: [
+    { id: 501, stack: '₮85K', players: '3/8', features: ['ms'] },
+    { id: 502, stack: '₮110K', players: '5/8', features: ['ms'] }
+  ],
+  7: [
+    { id: 701, stack: '₮15K', players: '5/6', features: ['bp', 'ms'] },
+    { id: 702, stack: '₮8K',  players: '2/6', features: ['bp'] }
   ],
   default: [
     { id: 9991, stack: '₮10K', players: '1/6', features: ['ms'] },
@@ -136,7 +153,7 @@ export default function CashGames() {
   const [isInspectorLoading, setIsInspectorLoading] = useState(false)
   const [sortKey, setSortKey] = useState(null)
   const [sortOrder, setSortOrder] = useState('asc')
-  const [selectedId, setSelectedId] = useState(1)
+  const [selectedId, setSelectedId] = useState(null)
   
   const location = useLocation()
   const navigate = useNavigate()
@@ -145,20 +162,16 @@ export default function CashGames() {
 
   useEffect(() => {
     setActiveTypes(['All'])
-    if (isAoFRoute) {
-      setSelectedId(null)
-    }
-  }, [location.pathname, isAoFRoute])
+    setSelectedId(null)
+  }, [location.pathname])
 
   const handleRefresh = () => {
     setIsRefreshing(true)
-    if (isAoFRoute) {
-      setSelectedId(null)
-      setIsInspectorLoading(true)
-    }
+    setSelectedId(null)
+    setIsInspectorLoading(true)
     setTimeout(() => {
       setIsRefreshing(false)
-      if (isAoFRoute) setIsInspectorLoading(false)
+      setIsInspectorLoading(false)
     }, 800)
   }
 
@@ -205,7 +218,11 @@ export default function CashGames() {
   }
 
   const sortedTables = useMemo(() => {
+    const currentFormat = location.pathname === '/all-in-or-fold' ? 'aof' : 
+                         location.pathname === '/bomb-pot' ? 'bp' : 'cash';
+
     return [...TABLES_DATA]
+      .filter(t => t.format === currentFormat)
       .filter(t => {
         if (activeTypes.includes('All')) return true
         const hasDirectMatch = activeTypes.includes(t.type)
@@ -220,9 +237,12 @@ export default function CashGames() {
       .sort((a, b) => {
         if (!sortKey) return 0
         const factor = sortOrder === 'asc' ? 1 : -1
-        return (a[sortKey] - b[sortKey]) * factor
+        const valA = a[sortKey];
+        const valB = b[sortKey];
+        if (typeof valA === 'string') return valA.localeCompare(valB) * factor;
+        return (valA - valB) * factor
       })
-  }, [sortKey, sortOrder, activeTypes, activePloVariants])
+  }, [sortKey, sortOrder, activeTypes, activePloVariants, location.pathname])
 
   useEffect(() => {
     if (isAoFRoute) {
